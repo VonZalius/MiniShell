@@ -6,7 +6,7 @@
 #    By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/24 14:27:20 by cmansey           #+#    #+#              #
-#    Updated: 2023/06/26 12:18:41 by cmansey          ###   ########.fr        #
+#    Updated: 2023/06/26 12:20:30 by cmansey          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ clean:
 fclean: clean
 	make clean
 	$(RM) $(NAME)
-	@$(RM) -f $(LIBFT)/libftprintf.a
+	@$(RM) -f $(LIBFT)/libft.a
 
 re: fclean all
 
