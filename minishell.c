@@ -40,6 +40,21 @@ lexer	*struct_init(char *word, lexer *prevew, int i)
 	return (lexer_word);
 }
 
+void	ft_free_lexer(lexer *word, char *cmd, char **cmd_list)
+{
+	lexer		*temp;
+
+		free(cmd);
+		free(cmd_list);
+		while (word != NULL)
+		{
+		temp = word;
+		word = word->prev;
+		free(temp->word);
+		free(temp);
+		}
+}
+
 int main(void)
 {
 	char	*cmd;
@@ -66,7 +81,7 @@ int main(void)
 
 		printf("You said : %s\n", cmd);
 
-		//Le code qui suis imprime dans le terminal divers élément afin de tester ce que réalise le reste du programme
+		//Ici on imprime dans le terminal divers élément afin de tester ce que réalise le reste du programme.
 		i = 0;
 		while (cmd_list[i] != NULL)
 		{
@@ -76,16 +91,9 @@ int main(void)
 				printf("Word : %s\n", find_word(word, i)->word);
 			i++;
 		}
-		free(cmd);
-		free(cmd_list);
-		lexer *current = word;
-		while (current != NULL)
-		{
-		lexer *temp = current;
-		current = current->next;
-		free(temp->word);
-		free(temp);
-		}
+
+		//Ici on Free tout le lexer.
+		ft_free_lexer(word, cmd, cmd_list);
 	}
 	return (0);
 }
