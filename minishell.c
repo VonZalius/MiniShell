@@ -28,8 +28,10 @@ lexer	*struct_init(char *word, lexer *prevew, int i)
 
 	lexer_word = malloc(sizeof(*lexer_word));
 	if (lexer_word == NULL)
+	{
+		free(lexer_word);
 		return(NULL);
-
+	}
 	lexer_word->index = i;
 	lexer_word->word = word;
 	lexer_word->next = NULL;
@@ -73,6 +75,16 @@ int main(void)
 			else
 				printf("Word : %s\n", find_word(word, i)->word);
 			i++;
+		}
+		free(cmd);
+		free(cmd_list);
+		lexer *current = word;
+		while (current != NULL)
+		{
+		lexer *temp = current;
+		current = current->next;
+		free(temp->word);
+		free(temp);
 		}
 	}
 	return (0);
