@@ -12,8 +12,11 @@ typedef struct lexer lexer;
 struct lexer
 {
     int		index;
-	int		is_token;
+	int		i;
 	char	*word;
+	char	**arg;
+	int		fdread;
+	int		fdwrite;
     lexer	*next;
 	lexer	*prev;
 };
