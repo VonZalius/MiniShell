@@ -23,8 +23,8 @@ lexer	*struct_init(lexer *prevew, int i)
 	lexer_word->arg = NULL;
 	lexer_word->index = i;
 	lexer_word->word = NULL;
-	lexer_word->next = NULL;
-	lexer_word->prev = prevew;
+	lexer_word->next = prevew;
+	lexer_word->prev = NULL;
 	return (lexer_word);
 }
 
@@ -138,7 +138,7 @@ int	search_for_fdread(lexer *word, char *cmd)
 
 int	how_many_arg(char *cmd, int i_bis, int j)
 {
-	while (cmd[i_bis] != '\0')
+	while (cmd[i_bis] != '\0' && cmd[i_bis] != '|')
 	{
 		if (cmd[i_bis] == '\"')
 		{
@@ -161,28 +161,27 @@ int	how_many_arg(char *cmd, int i_bis, int j)
 	return (j);
 }
 
-int	cmd_in_struct(lexer *word, char *cmd)
+int	cmd_in_struct(lexer *word, char *cmd, int start)
 {
 	int		i_bis;
 	int		j;
 	int		index_arg;
 	int		cmd_check;
 
-	word->i = 0;
+	word->i = start;
 	index_arg = 0;
 	i_bis = 0;
 	j = 0;
-	j = how_many_arg(cmd, i_bis, j);
+	j = how_many_arg(cmd, start, j);
 	word->arg = (char **)malloc(sizeof(char *) * j + 1);
+	if (word->arg == NULL)
+		return (0);
 	cmd_check = 0;
 	while (cmd[word->i] != '\0')
 	{
-		printf("XXXXXXXXXXXXXXXXXX = %i\n", word->i);
 		i_bis = word->i;
 		if (cmd[word->i] == '|')
-			return (2);
-		if (cmd[word->i] == '\0')
-			return (1);
+			return (word->i);
 		//skip_from_until(word, cmd, '<', ' ');
 		//skip_from_until(word, cmd, '>', ' ');
 		if (cmd[word->i] == ' ')
@@ -202,7 +201,7 @@ int	cmd_in_struct(lexer *word, char *cmd)
 			i_bis++;
 			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '-' && cmd[i_bis] != '\"'  && cmd[i_bis] != '\'' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
 				i_bis++;
-			word->arg[index_arg] = malloc(sizeof(char) * i_bis + 1);
+			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
 			if (word->arg[index_arg] == NULL)
 				return (0);
 			i_bis = 0;
@@ -220,7 +219,7 @@ int	cmd_in_struct(lexer *word, char *cmd)
 			i_bis++;
 			while (cmd[i_bis] != '\"')
 				i_bis++;
-			word->arg[index_arg] = malloc(sizeof(char) * i_bis + 1);
+			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
 			if (word->arg[index_arg] == NULL)
 				return (0);
 			word->i++;
@@ -240,7 +239,7 @@ int	cmd_in_struct(lexer *word, char *cmd)
 			i_bis++;
 			while (cmd[i_bis] != '\'')
 				i_bis++;
-			word->arg[index_arg] = malloc(sizeof(char) * i_bis + 1);
+			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
 			if (word->arg[index_arg] == NULL)
 				return (0);
 			word->i++;
@@ -264,7 +263,7 @@ int	cmd_in_struct(lexer *word, char *cmd)
 			}
 			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '-' && cmd[i_bis] != '"'  && cmd[i_bis] != '\'' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
 				i_bis++;
-			word->word = malloc(sizeof(char) * i_bis + 1);
+			word->word = malloc(sizeof(char) * i_bis - word->i + 1);
 			if (word->word == NULL)
 				return (0);
 			i_bis = 0;
@@ -280,7 +279,7 @@ int	cmd_in_struct(lexer *word, char *cmd)
 		else
 			word->i++;
 	}
-	return (1);
+	return (-1);
 }
 
 void	ft_free_lexer(lexer *word, char *cmd)
@@ -314,14 +313,16 @@ int main(void)
 	int		i;
 	int		j;
 	int		is_pipe;
+	int		start;
 	lexer		*word;
+	lexer		*save;
 
 	while (1)
 	{
 		cmd = readline("Prompt > ");
 		add_history(cmd);
 		word = NULL;
-
+		start = 0;
 		i = 0;
 		t = 1;
 		while (cmd[i] != '\0')
@@ -334,58 +335,77 @@ int main(void)
 		i = 0;
 		while (t != 0)
 		{
-			word = struct_init(word, i);
+			word = struct_init(word, t);
 			t--;
 			i++;
 		}
 
+		is_pipe = 1;
+		while (is_pipe > 0)
+		{
 		//Recherche pour fdread.
-		if (search_for_fdread(word, cmd) == 0)
-		{
-			printf("We got a problem with fdread bro !\n");
-			return (0);
-		}
-		printf("Fdread done !\n");
+			if (search_for_fdread(word, cmd) == 0)
+			{
+				printf("We got a problem with fdread bro !\n");
+				return (0);
+			}
+			printf("Fdread done !\n");
 		//Recherche pour fdwrite.
-		if (search_for_fdwrite(word, cmd) == 0)
-		{
-			printf("We got a problem with fdwrite bro !\n");
-			return (0);
-		}
-		printf("Fdwrite done !\n");
+			if (search_for_fdwrite(word, cmd) == 0)
+			{
+				printf("We got a problem with fdwrite bro !\n");
+				return (0);
+			}
+			printf("Fdwrite done !\n");
 		//Last check across the cmd
-		is_pipe = cmd_in_struct(word, cmd);
-		if (is_pipe == 0)
-		{
-			printf("We got a problem with the struct bro !\n");
-			return (0);
-		}
-		printf("Last_check done !\n");
-		if (is_pipe == 2)
-		{
-			printf("WE FIND A PIPE ! ABOOOOORT MISSION !\n");
-			return (0);
+			is_pipe = cmd_in_struct(word, cmd, start);
+			if (is_pipe == 0)
+			{
+				printf("We got a problem with the struct bro !\n");
+				return (0);
+			}
+			printf("Last_check done !\n");
+			if (is_pipe > 0)
+			{
+				printf("WE FIND A PIPE ! ABOOOOORT MISSION !\n");
+				start = is_pipe + 1;
+				save = word;
+				word = word->next;
+				word->prev = save;
+			}
 		}
 
 		//Ici on imprime dans le terminal divers élément afin de tester ce que réalise le reste du programme.
-		printf("You said : %s  <--------------------------------------\n", cmd);
+		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
+		j--;
 		i = 0;
-		while (i != j)
+		word = find_word(word, 1);
+		while (j >= 0)
 		{
-			printf("Word : %s\n", find_word(word, i)->word);
-			printf("Fdread : %i\n", find_word(word, i)->fdread);
-			printf("Fdwrite : %i\n", find_word(word, i)->fdwrite);
+			printf("Struct number %i\n", word->index);
+			printf("Word : %s\n", word->word);
+			printf("Fdread : %i\n", word->fdread);
+			printf("Fdwrite : %i\n", word->fdwrite);
+			//printf("howmanyarg : %i\n", how_many_arg(cmd, 0, 0));
 			t = 0;
-			while (t < how_many_arg(cmd, 0, 0))
+			while (t < how_many_arg(cmd, i, 0))
 			{
-				printf("Arg : %s\n", find_word(word, i)->arg[t]);
+				printf("Arg : %s\n", word->arg[t]);
 				t++;
 			}
+			printf("\n");
+			j--;
+			word = word->next;
+			while (cmd[i] != '|' && cmd[i] != '\0')
+				i++;
 			i++;
 		}
+		printf("---------- END ----------\n\n");
 
 		//Ici on Free tout le lexer.
 		ft_free_lexer(word, cmd);
 	}
 	return (0);
 }
+
+//save validé !
