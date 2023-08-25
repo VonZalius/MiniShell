@@ -203,7 +203,6 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 	word->arg = (char **)malloc(sizeof(char *) * (j + 1));
 	if (word->arg == NULL)
 		return (0);
-	//printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX %i\n", j);
 	word->cmd_check = 0;
 	while (cmd[word->i] != '\0')
 	{
@@ -368,6 +367,30 @@ void	ft_free_lexer(lexer *word, char *cmd)
 	free (cmd);
 }
 
+void    execute_echo(char **args)
+{
+    int    i;
+    int    add_newline;
+
+	printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
+    i = 1;
+    add_newline = 1;
+    if (args[1] != NULL && strcmp(args[1], "-n") == 0)
+    {
+        add_newline = 0;
+        i = 2;
+    }
+    while (args[i] != NULL)
+    {
+        printf("%s", args[i]);
+        if (args[i + 1] != NULL)
+            printf(" ");
+        i++;
+    }
+    if (add_newline)
+        printf("\n");
+}
+
 int main(void)
 {
 	char	*cmd;
@@ -441,7 +464,11 @@ int main(void)
 		}
 
 		if (strcmp(word->word, "echo") == 0)
+		{
 			printf("NIKTARACE");
+            execute_echo(word->arg);
+            //continue ;
+        }
 
 		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
 		j--;
