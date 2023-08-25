@@ -203,7 +203,7 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 	word->arg = (char **)malloc(sizeof(char *) * (j + 1));
 	if (word->arg == NULL)
 		return (0);
-	printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX %i\n", j);
+	//printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX %i\n", j);
 	word->cmd_check = 0;
 	while (cmd[word->i] != '\0')
 	{
@@ -439,6 +439,9 @@ int main(void)
 				word->prev = save;
 			}
 		}
+
+		if (strcmp(word->word, "echo") == 0)
+			printf("NIKTARACE");
 
 		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
 		j--;
