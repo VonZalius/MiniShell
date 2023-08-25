@@ -11,6 +11,7 @@
 typedef struct lexer lexer;
 struct lexer
 {
+	int		cmd_check;
     int		index;
 	int		i;
 	char	*word;

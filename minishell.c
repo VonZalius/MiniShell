@@ -138,74 +138,119 @@ int	search_for_fdread(lexer *word, char *cmd)
 
 int	how_many_arg(char *cmd, int i_bis, int j)
 {
+	int	copy;
+
+	copy = i_bis;
 	while (cmd[i_bis] != '\0' && cmd[i_bis] != '|')
 	{
-		if (cmd[i_bis] == '\"')
+		if (i_bis == copy && cmd[i_bis] == ' ')
+		{
+			while (cmd[i_bis] == ' ')
+				i_bis++;
+		}
+		else if (cmd[i_bis] == '\"')
 		{
 			i_bis++;
-			while (cmd[i_bis] != '\"')
+			while (cmd[i_bis] != '\"' && cmd[i_bis] != '\0')
 				i_bis++;
-			j++;
+			i_bis++;
 		}
 		else if (cmd[i_bis] == '\'')
 		{
 			i_bis++;
-			while (cmd[i_bis] != '\'')
+			while (cmd[i_bis] != '\'' && cmd[i_bis] != '\0')
 				i_bis++;
+			i_bis++;
+		}
+		else if (cmd[i_bis] == '<' || cmd[i_bis] == '>')
+		{
+			while (cmd[i_bis] == '<' || cmd[i_bis] == '>')
+				i_bis++;
+			j--;
+		}
+		else if (cmd[i_bis] == ' ')
+		{
+			while (cmd[i_bis] == ' ')
+				i_bis++;
+			if (cmd[i_bis] == '|' || cmd[i_bis] == '\0')
+				return (j);
+			if (cmd[i_bis] == '<' || cmd[i_bis] == '>')
+			{
+				while (cmd[i_bis] == '<' || cmd[i_bis] == '>')
+					i_bis++;
+				j--;
+			}
 			j++;
 		}
-		else if (cmd[i_bis] == '-')
-			j++;
-		i_bis++;
+		else
+			i_bis++;
+
 	}
 	return (j);
 }
 
 int	cmd_in_struct(lexer *word, char *cmd, int start)
 {
-	int		i_bis;
-	int		j;
-	int		index_arg;
-	int		cmd_check;
+	int			i_bis;
+	int			j;
+	int			index_arg;
 
 	word->i = start;
 	index_arg = 0;
 	i_bis = 0;
 	j = 0;
 	j = how_many_arg(cmd, start, j);
-	word->arg = (char **)malloc(sizeof(char *) * j + 1);
+	word->arg = (char **)malloc(sizeof(char *) * (j + 1));
 	if (word->arg == NULL)
 		return (0);
-	cmd_check = 0;
+	printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX %i\n", j);
+	word->cmd_check = 0;
 	while (cmd[word->i] != '\0')
 	{
 		i_bis = word->i;
 		if (cmd[word->i] == '|')
 			return (word->i);
-		//skip_from_until(word, cmd, '<', ' ');
-		//skip_from_until(word, cmd, '>', ' ');
 		if (cmd[word->i] == ' ')
 		{
 			while (cmd[word->i] == ' ')
 				word->i++;
 		}
+
+		else if (word->cmd_check == 0 && cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
+		{
+			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+				i_bis++;
+			word->word = malloc(sizeof(char) * i_bis - word->i + 1);
+			if (word->word == NULL)
+				return (0);
+			i_bis = 0;
+			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
+			{
+				word->word[i_bis] = cmd[word->i];
+				word->i++;
+				i_bis++;
+			}
+			word->word[i_bis] = '\0';
+			word->cmd_check = 1;
+		}
+
 		else if (cmd[word->i] == '<' || cmd[word->i] == '>')
 		{
 			word->i++;
-			while(cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '-' && cmd[word->i] != '<' && cmd[word->i] != '>' && cmd[word->i] != '\'' && cmd[word->i] != '\"')
+			while(cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
 				word->i++;
 		}
-		else if (cmd[word->i] == '-')
+		else if (cmd[word->i] == '-' && word->cmd_check != 0)
 		{
-			word->i++;
-			i_bis++;
-			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '-' && cmd[i_bis] != '\"'  && cmd[i_bis] != '\'' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+			//word->i++;
+			//i_bis++;
+			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
 				i_bis++;
 			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
 			if (word->arg[index_arg] == NULL)
 				return (0);
 			i_bis = 0;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '-' && cmd[word->i] != '<' && cmd[word->i] != '>' && cmd[word->i] != '\'' && cmd[word->i] != '\"')
+			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
 			{
 				word->arg[index_arg][i_bis] = cmd[word->i];
 				word->i++;
@@ -214,10 +259,10 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 			word->arg[index_arg][i_bis] = '\0';
 			index_arg++;
 		}
-		else if (cmd[word->i] == '\"')
+		else if (cmd[word->i] == '\"' && word->cmd_check != 0)
 		{
 			i_bis++;
-			while (cmd[i_bis] != '\"')
+			while (cmd[i_bis] != '\"' && cmd[i_bis] != '\0')
 				i_bis++;
 			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
 			if (word->arg[index_arg] == NULL)
@@ -234,10 +279,10 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 			word->i++;
 			index_arg++;
 		}
-		else if (cmd[word->i] == '\'')
+		else if (cmd[word->i] == '\'' && word->cmd_check != 0)
 		{
 			i_bis++;
-			while (cmd[i_bis] != '\'')
+			while (cmd[i_bis] != '\'' && cmd[i_bis] != '\0')
 				i_bis++;
 			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
 			if (word->arg[index_arg] == NULL)
@@ -256,25 +301,43 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 		}
 		else if (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '-' && cmd[word->i] != '\"'  && cmd[word->i] != '\'' && cmd[word->i] != '<' && cmd[word->i] != '>')
 		{  
-			if (cmd_check == 1)
+			if (word->cmd_check != 0)
 			{
-				printf("To many commands\n");
-				return (0);
-			}
-			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '-' && cmd[i_bis] != '"'  && cmd[i_bis] != '\'' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
-				i_bis++;
-			word->word = malloc(sizeof(char) * i_bis - word->i + 1);
-			if (word->word == NULL)
-				return (0);
-			i_bis = 0;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '-' && cmd[word->i] != '<' && cmd[word->i] != '>' && cmd[word->i] != '\'' && cmd[word->i] != '\"')
-			{
-				word->word[i_bis] = cmd[word->i];
+				while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+					i_bis++;
+				word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
+				if (word->arg[index_arg] == NULL)
+					return (0);
+				i_bis = 0;
+				while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
+				{
+					word->arg[index_arg][i_bis] = cmd[word->i];
+					word->i++;
+					i_bis++;
+				}
+				word->arg[index_arg][i_bis] = '\0';
 				word->i++;
-				i_bis++;
+				index_arg++;
+				word->cmd_check++;
 			}
-			word->word[i_bis] = '\0';
-			cmd_check = 1;
+			/*
+			else
+			{
+				while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+					i_bis++;
+				word->word = malloc(sizeof(char) * i_bis - word->i + 1);
+				if (word->word == NULL)
+					return (0);
+				i_bis = 0;
+				while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
+				{
+					word->word[i_bis] = cmd[word->i];
+					word->i++;
+					i_bis++;
+				}
+				word->word[i_bis] = '\0';
+				word->cmd_check = 1;
+			}*/
 		}
 		else
 			word->i++;
@@ -357,6 +420,8 @@ int main(void)
 				return (0);
 			}
 			printf("Fdwrite done !\n");
+		//TEST TEST TEST A RECHECKER 	SUPPRIME LES " ET LES '
+			
 		//Last check across the cmd
 			is_pipe = cmd_in_struct(word, cmd, start);
 			if (is_pipe == 0)
@@ -375,7 +440,6 @@ int main(void)
 			}
 		}
 
-		//Ici on imprime dans le terminal divers élément afin de tester ce que réalise le reste du programme.
 		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
 		j--;
 		i = 0;
@@ -388,7 +452,7 @@ int main(void)
 			printf("Fdwrite : %i\n", word->fdwrite);
 			//printf("howmanyarg : %i\n", how_many_arg(cmd, 0, 0));
 			t = 0;
-			while (t < how_many_arg(cmd, i, 0))
+			while (t < (how_many_arg(cmd, i, 0)))
 			{
 				printf("Arg : %s\n", word->arg[t]);
 				t++;
@@ -408,4 +472,4 @@ int main(void)
 	return (0);
 }
 
-//save validé !
+//save validé (oui oui)!
