@@ -50,9 +50,9 @@ int skip_from_until(lexer *word, char *cmd, char that, char this)
 	return (1);
 }
 
-int	search_for_fdwrite(lexer *word, char *cmd)
+int	search_for_fdwrite(lexer *word, char *cmd, int start)
 {
-	word->i = 0;
+	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{
 		if (cmd[word->i] == '\"')
@@ -93,9 +93,9 @@ int	search_for_fdwrite(lexer *word, char *cmd)
 	return (1);
 }
 
-int	search_for_fdread(lexer *word, char *cmd)
+int	search_for_fdread(lexer *word, char *cmd, int start)
 {
-	word->i = 0;
+	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{
 		if (cmd[word->i] == '\"')
@@ -466,13 +466,13 @@ size_t	ft_strlen_space(const char *s, size_t i)
 	return (i);
 }
 
-char	*search_for_env(lexer *word, char *cmd)
+char	*search_for_env(lexer *word, char *cmd, int start)
 {
 	char	*str2;
 	int		i;
 	int		j;
 
-	word->i = 0;
+	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{
 		i = 0;
@@ -547,21 +547,21 @@ int main(void)
 		while (is_pipe > 0)
 		{
 		//Recherche pour fdread.
-			if (search_for_fdread(word, cmd) == 0)
+			if (search_for_fdread(word, cmd, start) == 0)
 			{
 				printf("We got a problem with fdread bro !\n");
 				return (0);
 			}
 			printf("Fdread done !\n");
 		//Recherche pour fdwrite.
-			if (search_for_fdwrite(word, cmd) == 0)
+			if (search_for_fdwrite(word, cmd, start) == 0)
 			{
 				printf("We got a problem with fdwrite bro !\n");
 				return (0);
 			}
 			printf("Fdwrite done !\n");
-		//TEST TEST TEST A RECHECKER 	Remplace les $ par l'environnement
-			cmd = search_for_env(word, cmd);
+		//Remplace les $ par l'environnement
+			cmd = search_for_env(word, cmd, start);
 			if (cmd == NULL)
 			{
 				printf("We got a problem with the environnement bro !\n");
@@ -626,4 +626,3 @@ int main(void)
 }
 
 //save validé (oui oui)!
-// GERE LE PIPE POUR LES < > $
