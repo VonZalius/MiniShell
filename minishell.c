@@ -486,6 +486,8 @@ char	*search_for_env(lexer *word, char *cmd, int start)
 				word->i++;
 			}
 		}
+		if (cmd[word->i] == '$' && cmd[word->i + 1] == '?')
+			word->i = word->i + 2;
 		if (cmd[word->i] == '$')
 		{
 			word->i++;
@@ -508,6 +510,25 @@ char	*search_for_env(lexer *word, char *cmd, int start)
 	return (cmd);
 }
 
+void  INThandler(int sig)
+{
+	if (sig == SIGSEGV)
+	{
+		printf("\nYou press Ctrl-D\n");
+		exit(1);
+	}
+	else if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		(void) sig;
+	}
+	else
+		printf("\n Sorry... What ??\n")
+}
+
 int main(void)
 {
 	char	*cmd;
@@ -520,6 +541,9 @@ int main(void)
 	lexer		*word;
 	lexer		*save;
 
+	signal(SIGSEGV, INThandler);
+	signal(SIGINT, INThandler);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		cmd = readline("Prompt > ");
@@ -625,4 +649,4 @@ int main(void)
 	return (0);
 }
 
-//save validé (oui oui)!
+//save validé !
