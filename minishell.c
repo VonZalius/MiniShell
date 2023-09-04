@@ -50,6 +50,45 @@ int skip_from_until(lexer *word, char *cmd, char that, char this)
 	return (1);
 }
 
+int open_fdwrite(lexer *word, char *cmd, char token)
+{
+	char	*file;
+	int clone;
+	int i;
+
+	i = 0;
+	while (cmd[word->i] == token)
+		word->i++;
+	clone = word->i;
+	while (cmd[word->i] != ' ' && cmd[word->i] != '<' && cmd[word->i] != '>' && cmd[word->i] != '|' && cmd[word->i] != '\0')
+	{
+		if(cmd[word->i] != '\"' && cmd[word->i] != '\'')
+			i++;
+		word->i++;
+	}
+	word->i = clone;
+	file = malloc(sizeof(char) * (i + 1));
+	if (file == NULL)
+		return (0);
+	i = 0;
+	while (cmd[word->i] != ' ' && cmd[word->i] != '<' && cmd[word->i] != '>' && cmd[word->i] != '|' && cmd[word->i] != '\0')
+	{
+		if(cmd[word->i] != '\"' && cmd[word->i] != '\'')
+		{
+			file[i] = cmd[word->i];
+			i++;
+		}
+		word->i++;
+	}
+	file[i] = '\0';
+	if (token == '>')
+		clone = open(file, O_CREAT, 0777);
+	if (token == '<')
+		clone = open(file, 0);	
+	free(file);
+	return (clone);
+}
+
 int	search_for_fdwrite(lexer *word, char *cmd, int start)
 {
 	word->i = start;
@@ -76,19 +115,13 @@ int	search_for_fdwrite(lexer *word, char *cmd, int start)
 			}
 		}
 		if (cmd[word->i] == '>')
-		{
-			word->i++;
-			if (cmd[word->i] == '>')
-			{
-				word->fdwrite = 21;
-			}
-			else
-			{
-				word->fdwrite = 20;
-				word->i--;
-			}
+		{	
+			word->fdwrite = open_fdwrite(word, cmd, '>');
+			if (word->fdwrite == -1)
+				return (0);
 		}
-		word->i++;
+		if (cmd[word->i] != '\0' && cmd[word->i] != '|')
+			word->i++;
 	}
 	return (1);
 }
@@ -120,16 +153,9 @@ int	search_for_fdread(lexer *word, char *cmd, int start)
 		}
 		if (cmd[word->i] == '<')
 		{
-			word->i++;
-			if (cmd[word->i] == '<')
-			{
-				word->fdread = 11;
-			}
-			else
-			{
-				word->fdread = 10;
-				word->i--;
-			}
+			word->fdread = open_fdwrite(word, cmd, '<');
+			if (word->fdread == -1)
+				return (0);
 		}
 		word->i++;
 	}
@@ -526,7 +552,7 @@ void  INThandler(int sig)
 		(void) sig;
 	}
 	else
-		printf("\n Sorry... What ??\n")
+		printf("\n Sorry... What ??\n");
 }
 
 int main(void)
@@ -570,6 +596,14 @@ int main(void)
 		is_pipe = 1;
 		while (is_pipe > 0)
 		{
+		//Remplace les $ par l'environnement
+			cmd = search_for_env(word, cmd, start);
+			if (cmd == NULL)
+			{
+				printf("We got a problem with the environnement bro !\n");
+				return (0);
+			}
+			printf("Environnement done !\n");
 		//Recherche pour fdread.
 			if (search_for_fdread(word, cmd, start) == 0)
 			{
@@ -584,14 +618,6 @@ int main(void)
 				return (0);
 			}
 			printf("Fdwrite done !\n");
-		//Remplace les $ par l'environnement
-			cmd = search_for_env(word, cmd, start);
-			if (cmd == NULL)
-			{
-				printf("We got a problem with the environnement bro !\n");
-				return (0);
-			}
-			printf("Environnement done !\n");
 		//Last check across the cmd
 			is_pipe = cmd_in_struct(word, cmd, start);
 			if (is_pipe == 0)
@@ -610,6 +636,15 @@ int main(void)
 			}
 		}
 
+		/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
+			   |XX|
+			   |XX|
+			   |XX|
+			 \XXXXXX/
+		 	  \XXXX/
+			   \XX/
+		        \/		*/
+
 		/*if (strcmp(word->word, "echo") == 0)
 		{
 			printf("NIKTARACE");
@@ -617,6 +652,22 @@ int main(void)
             //continue ;
         }*/
 
+		/*      /\ 
+			   /XX\ 
+		 	  /XXXX\		
+			 /XXXXXX\ 
+			   |XX|
+			   |XX|
+			   |XX|
+		LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
+
+		//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius.
+		if (word->fdwrite != 0)
+			close(word->fdwrite);
+		if (word->fdread != 0)
+			close(word->fdread);
+
+		//Ici on imprime une serie d'élément afin de checker que tout fonctionne. ATTENTION, CECI MODIFIE LES VALEURS !!!
 		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
 		j--;
 		i = 0;
@@ -645,8 +696,9 @@ int main(void)
 
 		//Ici on Free tout le lexer.
 		ft_free_lexer(word, cmd);
+
 	}
 	return (0);
 }
 
-//save validé !
+//save validé yeeee !
