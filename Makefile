@@ -12,7 +12,7 @@
 
 NAME = minishell
 
-SRC = minishell.c
+SRC = minishell.c fd_handler.c env_handler.c struct_handler.c parsing_1.c parsing_2.c utils.c
 
 OBJ := $(SRC:%.c=%.o)
 

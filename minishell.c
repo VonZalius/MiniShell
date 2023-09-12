@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-lexer	*find_word(lexer *last_word, int i)
+/*lexer	*find_word(lexer *last_word, int i)
 {
 	if(last_word->index == i)
 		return(last_word);
@@ -26,9 +26,9 @@ lexer	*struct_init(lexer *prevew, int i)
 	lexer_word->next = prevew;
 	lexer_word->prev = NULL;
 	return (lexer_word);
-}
+}*/
 
-int skip_from_until(lexer *word, char *cmd, char that, char this)
+/*int skip_from_until(lexer *word, char *cmd, char that, char this)
 {
 	if (cmd[word->i] == that)
 	{
@@ -48,9 +48,9 @@ int skip_from_until(lexer *word, char *cmd, char that, char this)
 		}
 	}
 	return (1);
-}
+}*/
 
-int open_fdwrite(lexer *word, char *cmd, char token)
+/*int open_fdwrite(lexer *word, char *cmd, char token)
 {
 	char	*file;
 	int clone;
@@ -160,9 +160,9 @@ int	search_for_fdread(lexer *word, char *cmd, int start)
 		word->i++;
 	}
 	return (1);
-}
+}*/
 
-int	how_many_arg(char *cmd, int i_bis, int j)
+/*int	how_many_arg(char *cmd, int i_bis, int j)
 {
 	int	copy;
 
@@ -213,9 +213,9 @@ int	how_many_arg(char *cmd, int i_bis, int j)
 
 	}
 	return (j);
-}
+}*/
 
-int	cmd_in_struct(lexer *word, char *cmd, int start)
+/*int	cmd_in_struct(lexer *word, char *cmd, int start)
 {
 	int			i_bis;
 	int			j;
@@ -324,7 +324,7 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 			word->i++;
 			index_arg++;
 		}
-		/*else if (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '-' && cmd[word->i] != '\"'  && cmd[word->i] != '\'' && cmd[word->i] != '<' && cmd[word->i] != '>')
+		else if (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '-' && cmd[word->i] != '\"'  && cmd[word->i] != '\'' && cmd[word->i] != '<' && cmd[word->i] != '>')
 		{  
 			if (word->cmd_check != 0)
 			{
@@ -363,14 +363,14 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 				word->word[i_bis] = '\0';
 				word->cmd_check = 1;
 			}
-		}*/
+		}
 		else
 			word->i++;
 	}
 	return (-1);
-}
+}*/
 
-void	ft_free_lexer(lexer *word, char *cmd)
+/*void	ft_free_lexer(lexer *word, char *cmd)
 {
 	lexer		*temp;
 	int			i;
@@ -391,7 +391,7 @@ void	ft_free_lexer(lexer *word, char *cmd)
 		free(temp);
 	}
 	free (cmd);
-}
+}*/
 
 /*void    execute_echo(char **args)
 {
@@ -417,7 +417,7 @@ void	ft_free_lexer(lexer *word, char *cmd)
         printf("\n");
 }*/
 
-int ft_len_of_$(char *str1)
+/*int ft_len_of_$(char *str1)
 {
 	int	i;
 	int	b;
@@ -452,7 +452,6 @@ char	*ft_strinsert(char *str1, char *str2, int pos)
 	if (str2 == NULL)
 		return (NULL);
 	len = ft_strlen(str1) + ft_strlen(str2) - ft_len_of_$(str1);
-	printf ("SALUUUT %s %li %li %i\n",str1 ,ft_strlen(str1), ft_strlen(str2), ft_len_of_$(str1));
 	final = malloc (sizeof(char) * (len) + 1);
 	if (final == NULL)
 		return (NULL);
@@ -534,9 +533,9 @@ char	*search_for_env(lexer *word, char *cmd, int start)
 	}
 	//free (str2);
 	return (cmd);
-}
+}*/
 
-void  INThandler(int sig)
+/*void  INThandler(int sig)
 {
 	if (sig == SIGSEGV)
 	{
@@ -553,7 +552,7 @@ void  INThandler(int sig)
 	}
 	else
 		printf("\n Sorry... What ??\n");
-}
+}*/
 
 int main(void)
 {
@@ -580,9 +579,22 @@ int main(void)
 		t = 1;
 		while (cmd[i] != '\0')
 		{
-			if (cmd[i] == '|')
+			if (cmd[i] == '\"')
+			{
+				i++;
+				while(cmd[i] != '\"' && cmd [i] != '\0')
+					i++;
+			}
+			else if (cmd[i] == '\'')
+			{
+				i++;
+				while(cmd[i] != '\'' && cmd [i] != '\0')
+					i++;
+			}
+			else if (cmd[i] == '|')
 				t++;
-			i++;
+			if(cmd[i] != '\0')
+				i++;
 		}
 		j = t;
 		i = 0;
