@@ -1,40 +1,52 @@
 #include "minishell.h"
 
+int h_m_a_bis(char *cmd, int i_bis)
+{
+	if (cmd[i_bis] == ' ')
+	{
+		//printf("X - - - - - >  Space detected [%c]\n", cmd[i_bis]);
+		while (cmd[i_bis] == ' ')
+			i_bis++;
+	}
+	else if (cmd[i_bis] == '<' || cmd[i_bis] == '>')
+	{
+		//printf("X - - - - - >  '<' or '>' detected [%c]\n", cmd[i_bis]);
+		i_bis++;
+		while(cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+			i_bis++;
+	}
+	return (i_bis);
+}
+
+int	h_m_a_bis2(char *cmd, int i_bis)
+{
+	if(cmd[i_bis] == '\'')
+	{
+		i_bis++;
+		while(cmd[i_bis] != '\'')
+			i_bis++;
+	}
+	if(cmd[i_bis] == '\"')
+	{
+		i_bis++;
+		while(cmd[i_bis] != '\"')
+			i_bis++;
+	}
+	return (i_bis);
+}
+
 int	how_many_arg(char *cmd, int i_bis, int j)
 {
 	while (cmd[i_bis] != '\0' && cmd[i_bis] != '|')
 	{
-		if (cmd[i_bis] == ' ')
-		{
-			//printf("X - - - - - >  Space detected [%c]\n", cmd[i_bis]);
-			while (cmd[i_bis] == ' ')
-				i_bis++;
-		}
-		else if (cmd[i_bis] == '<' || cmd[i_bis] == '>')
-		{
-			//printf("X - - - - - >  '<' or '>' detected [%c]\n", cmd[i_bis]);
-			i_bis++;
-			while(cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
-				i_bis++;
-		}
-
+		if (cmd[i_bis] == ' ' || cmd[i_bis] == '<' || cmd[i_bis] == '>')
+			i_bis = h_m_a_bis(cmd, i_bis);
 		else
 		{
 			//printf("X - - - - - >  Word or Argumet detected [%c]\n", cmd[i_bis]);
 			while(cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
 			{
-				if(cmd[i_bis] == '\'')
-				{
-					i_bis++;
-					while(cmd[i_bis] != '\'')
-						i_bis++;
-				}
-				if(cmd[i_bis] == '\"')
-				{
-					i_bis++;
-					while(cmd[i_bis] != '\"')
-						i_bis++;
-				}
+				i_bis = h_m_a_bis2(cmd, i_bis);
 				i_bis++;
 			}
 			j++;

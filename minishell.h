@@ -10,6 +10,16 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
+typedef struct mini mini;
+struct mini
+{
+	char	*final;
+	int		len;
+	int		i;
+	int		j;
+	int		k;
+};
+
 typedef struct lexer lexer;
 struct lexer
 {

@@ -554,99 +554,103 @@ char	*search_for_env(lexer *word, char *cmd, int start)
 		printf("\n Sorry... What ??\n");
 }*/
 
-int main(void)
+int nbr_of_pipe(char *cmd)
 {
-	char	*cmd;
-	//char	**cmd_list;
-	int		t;
-	int		i;
-	int		j;
-	int		is_pipe;
-	int		start;
-	lexer		*word;
-	lexer		*save;
+	int t;
+	int i;
 
-	signal(SIGSEGV, INThandler);
-	signal(SIGINT, INThandler);
-	signal(SIGQUIT, SIG_IGN);
-	while (1)
+	t = 1;
+	i = 0;
+	while (cmd[i] != '\0')
 	{
-		cmd = readline("Prompt > ");
-		add_history(cmd);
-		word = NULL;
-		start = 0;
-		i = 0;
-		t = 1;
-		while (cmd[i] != '\0')
+		if (cmd[i] == '\"')
 		{
-			if (cmd[i] == '\"')
-			{
-				i++;
-				while(cmd[i] != '\"' && cmd [i] != '\0')
-					i++;
-			}
-			else if (cmd[i] == '\'')
-			{
-				i++;
-				while(cmd[i] != '\'' && cmd [i] != '\0')
-					i++;
-			}
-			else if (cmd[i] == '|')
-				t++;
-			if(cmd[i] != '\0')
-				i++;
-		}
-		j = t;
-		i = 0;
-		while (t != 0)
-		{
-			word = struct_init(word, t);
-			t--;
 			i++;
+			while(cmd[i] != '\"' && cmd [i] != '\0')
+				i++;
 		}
-
-		is_pipe = 1;
-		while (is_pipe > 0)
+		else if (cmd[i] == '\'')
 		{
-		//Remplace les $ par l'environnement
-			cmd = search_for_env(word, cmd, start);
-			if (cmd == NULL)
-			{
-				printf("We got a problem with the environnement bro !\n");
-				return (0);
-			}
-			printf("Environnement done !\n");
-		//Recherche pour fdread.
-			if (search_for_fdread(word, cmd, start) == 0)
-			{
-				printf("We got a problem with fdread bro !\n");
-				return (0);
-			}
-			printf("Fdread done !\n");
-		//Recherche pour fdwrite.
-			if (search_for_fdwrite(word, cmd, start) == 0)
-			{
-				printf("We got a problem with fdwrite bro !\n");
-				return (0);
-			}
-			printf("Fdwrite done !\n");
-		//Last check across the cmd
-			is_pipe = cmd_in_struct(word, cmd, start);
-			if (is_pipe == 0)
-			{
-				printf("We got a problem with the struct bro !\n");
-				return (0);
-			}
-			printf("Last_check done !\n");
-			if (is_pipe > 0)
-			{
-				printf("WE FIND A PIPE ! ABOOOOORT MISSION !\n");
-				start = is_pipe + 1;
-				save = word;
-				word = word->next;
-				word->prev = save;
-			}
+			i++;
+			while(cmd[i] != '\'' && cmd [i] != '\0')
+				i++;
 		}
+		else if (cmd[i] == '|')
+			t++;
+		if(cmd[i] != '\0')
+			i++;
+	}
+	return (t);
+}
+
+char	*env_write_read(char *cmd, lexer *word, int start)
+{
+//Remplace les $ par l'environnement
+	cmd = search_for_env(word, cmd, start);
+	if (cmd == NULL)
+	{
+		printf("We got a problem with the environnement bro !\n");
+		return (0);
+	}
+	printf("Environnement done !\n");
+//Recherche pour fdread.
+	if (search_for_fdread(word, cmd, start) == 0)
+	{
+		printf("We got a problem with fdread bro !\n");
+		return (0);
+	}
+	printf("Fdread done !\n");
+//Recherche pour fdwrite.
+	if (search_for_fdwrite(word, cmd, start) == 0)
+	{
+		printf("We got a problem with fdwrite bro !\n");
+		return (0);
+	}
+	printf("Fdwrite done !\n");
+	return (cmd);
+}
+
+int	last_check(char *cmd, lexer *word, int start, int is_pipe)
+{
+//Last check across the cmd
+	is_pipe = cmd_in_struct(word, cmd, start);
+	if (is_pipe == 0)
+	{
+		printf("We got a problem with the struct bro !\n");
+		return (0);
+	}
+	printf("Last_check done !\n");
+	return (is_pipe);
+}
+
+void main_while(char *cmd, lexer *word, lexer *save, int start)
+{
+	int		t;
+	int		i;/* <--- utile pour les print, donc à supprimer */
+	int		j;/* <--- utile pour les print, donc à supprimer */
+
+	t = nbr_of_pipe(cmd);
+	j = t; /* <--- utile pour les print, donc à supprimer */
+	while (t != 0)
+	{
+		word = struct_init(word, t);
+		t--;
+		i++;
+	}
+	t = 1;
+	while (t > 0)
+	{
+		cmd = env_write_read(cmd, word, start);
+		t = last_check(cmd, word, start, t);
+		if (t > 0)
+		{
+			printf("WE FIND A PIPE ! ABOOOOORT MISSION !\n"); /* <--- à supprimer */
+			start = t + 1;
+			save = word;
+			word = word->next;
+			word->prev = save;
+		}
+	}
 
 		/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
 			   |XX|
@@ -673,13 +677,13 @@ int main(void)
 			   |XX|
 		LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
 
-		//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius.
+	//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à supprimer ???
 		if (word->fdwrite != 0)
 			close(word->fdwrite);
 		if (word->fdread != 0)
 			close(word->fdread);
 
-		//Ici on imprime une serie d'élément afin de checker que tout fonctionne. ATTENTION, CECI MODIFIE LES VALEURS !!!
+	//Ici on imprime une serie d'élément afin de checker que tout fonctionne, à supprimer. ATTENTION, CECI MODIFIE LES VALEURS !!!
 		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
 		j--;
 		i = 0;
@@ -706,9 +710,32 @@ int main(void)
 		}
 		printf("---------- END ----------\n\n");
 
-		//Ici on Free tout le lexer.
-		ft_free_lexer(word, cmd);
+	//Ici on Free tout le lexer.
+	ft_free_lexer(word, cmd);
+}
 
+int main(void)
+{
+	char		*cmd;
+	//char	**cmd_list;
+	//int		t;
+	//int		i;/* <--- utile pour les print, donc à supprimer */
+	//int		j;/* <--- utile pour les print, donc à supprimer */
+	int			start;
+	lexer		*word;
+	lexer		*save;
+
+	signal(SIGSEGV, INThandler);
+	signal(SIGINT, INThandler);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
+	{
+		cmd = readline("Prompt > ");
+		add_history(cmd);
+		word = NULL;
+		save = NULL;
+		start = 0;
+		main_while(cmd, word, save, start);
 	}
 	return (0);
 }
