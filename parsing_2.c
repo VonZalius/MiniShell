@@ -37,6 +37,8 @@ int	h_m_a_bis2(char *cmd, int i_bis)
 
 int	how_many_arg(char *cmd, int i_bis, int j)
 {
+	if (cmd == NULL)
+		return (0);
 	while (cmd[i_bis] != '\0' && cmd[i_bis] != '|')
 	{
 		if (cmd[i_bis] == ' ' || cmd[i_bis] == '<' || cmd[i_bis] == '>')

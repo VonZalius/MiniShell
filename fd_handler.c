@@ -79,6 +79,7 @@ int skip_quots(char *cmd, lexer *word)
 
 int	search_for_fdwrite(lexer *word, char *cmd, int start)
 {
+	printf("-> search_for_fdwrite...\n");
 	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{
@@ -98,6 +99,7 @@ int	search_for_fdwrite(lexer *word, char *cmd, int start)
 
 int	search_for_fdread(lexer *word, char *cmd, int start)
 {
+	printf("-> search_for_fdread...\n");
 	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{

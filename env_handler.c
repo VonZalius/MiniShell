@@ -106,6 +106,7 @@ char	*s_f_e_bis(char *cmd, lexer *word)
 
 char	*search_for_env(lexer *word, char *cmd, int start)
 {
+	printf("-> search_for_env...\n");
 	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{
@@ -122,6 +123,8 @@ char	*search_for_env(lexer *word, char *cmd, int start)
 		if (cmd[word->i] == '$' && cmd[word->i + 1] == '?')
 			word->i = word->i + 2;
 		cmd = s_f_e_bis(cmd, word);
+		if (cmd == NULL)
+			return (NULL);
 		word->i++;
 	}
 	//free (str2);

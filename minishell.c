@@ -586,27 +586,28 @@ int nbr_of_pipe(char *cmd)
 char	*env_write_read(char *cmd, lexer *word, int start)
 {
 //Remplace les $ par l'environnement
+	word->good = 1;
 	cmd = search_for_env(word, cmd, start);
 	if (cmd == NULL)
 	{
 		printf("We got a problem with the environnement bro !\n");
-		return (0);
+		word->good = 0;
 	}
-	printf("Environnement done !\n");
+	printf("   Environnement done !\n");
 //Recherche pour fdread.
-	if (search_for_fdread(word, cmd, start) == 0)
+	if (word->good == 1 && search_for_fdread(word, cmd, start) == 0)
 	{
 		printf("We got a problem with fdread bro !\n");
-		return (0);
+		word->good = 0;
 	}
-	printf("Fdread done !\n");
+	printf("   Fdread done !\n");
 //Recherche pour fdwrite.
-	if (search_for_fdwrite(word, cmd, start) == 0)
+	if (word->good == 1 && search_for_fdwrite(word, cmd, start) == 0)
 	{
 		printf("We got a problem with fdwrite bro !\n");
-		return (0);
+		word->good = 0;
 	}
-	printf("Fdwrite done !\n");
+	printf("   Fdwrite done !\n");
 	return (cmd);
 }
 
@@ -617,6 +618,7 @@ int	last_check(char *cmd, lexer *word, int start, int is_pipe)
 	if (is_pipe == 0)
 	{
 		printf("We got a problem with the struct bro !\n");
+		word->good = 0;
 		return (0);
 	}
 	printf("Last_check done !\n");
@@ -641,17 +643,25 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 	while (t > 0)
 	{
 		cmd = env_write_read(cmd, word, start);
-		t = last_check(cmd, word, start, t);
-		if (t > 0)
+		if (word->good == 1)
 		{
-			printf("WE FIND A PIPE ! ABOOOOORT MISSION !\n"); /* <--- à supprimer */
-			start = t + 1;
-			save = word;
-			word = word->next;
-			word->prev = save;
+			t = last_check(cmd, word, start, t);
+			if (t > 0)
+			{
+				printf("WE FIND A PIPE ! ABOOOOORT MISSION !\n"); /* <--- à supprimer */
+				start = t + 1;
+				save = word;
+				word = word->next;
+				word->prev = save;
+			}
 		}
+		else
+			t = 0;
 	}
 
+	if (word->good == 1)
+	{
+		printf("\n   RESULTAT !!!\n\n");
 		/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
 			   |XX|
 			   |XX|
@@ -661,12 +671,73 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			   \XX/
 		        \/		*/
 
-		/*if (strcmp(word->word, "echo") == 0)
+
+		if (word->word == NULL)
 		{
-			printf("NIKTARACE");
-            execute_echo(word->arg);
-            //continue ;
-        }*/
+			t = t;
+		}
+
+		else if (strcmp(word->word, "echo") == 0)
+		{
+			execute_echo(&word->arg[-1]);
+			//continue ;
+		}
+
+		/*else if (strcmp(word->word, "cd") == 0)
+		{
+			execute_cd(&word->arg[-1], oldpwd);
+			//continue ;
+		}*/
+
+		else if (strcmp(word->word, "pwd") == 0)
+		{
+			execute_pwd();
+			//continue ;
+		}
+
+		/*else if (strcmp(word->word, "export") == 0)
+		{
+			execute_export(&word->arg[-1], &environ_copy);
+			//continue ;
+		}
+
+		else if (strcmp(word->word, "unset") == 0)
+		{
+			execute_unset(&word->arg[-1], &environ);
+			//continue ;
+		}
+
+		else if (strcmp(word->word, "env") == 0)
+		{
+			execute_env(environ);
+			//continue ;
+		}*/
+
+		else if (strcmp(word->word, "exit") == 0)
+		{
+			execute_exit(&word->arg[-1]);
+		}
+
+		// Exécuter des commandes externes en utilisant fork et execve
+		/*pid_t pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			//continue ;
+		}
+		else if (pid == 0)
+		{
+			// Processus enfant
+			execvp(word->word, &word->arg[-1]);
+			perror("execvp");
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			// Processus parent
+			wait(NULL);
+		}*/
+
 
 		/*      /\ 
 			   /XX\ 
@@ -676,7 +747,8 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			   |XX|
 			   |XX|
 		LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
-
+		printf("\n   FIN DES RESULTAT !!!\n");
+	}
 	//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à supprimer ???
 		if (word->fdwrite != 0)
 			close(word->fdwrite);
@@ -684,6 +756,8 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			close(word->fdread);
 
 	//Ici on imprime une serie d'élément afin de checker que tout fonctionne, à supprimer. ATTENTION, CECI MODIFIE LES VALEURS !!!
+	if (word->good == 1)
+	{
 		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
 		j--;
 		i = 0;
@@ -709,9 +783,11 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			i++;
 		}
 		printf("---------- END ----------\n\n");
+	}
 
 	//Ici on Free tout le lexer.
 	ft_free_lexer(word, cmd);
+	printf("\n    -- END OF LOOP --\n\n\n");
 }
 
 int main(void)
@@ -719,7 +795,7 @@ int main(void)
 	char		*cmd;
 	//char	**cmd_list;
 	//int		t;
-	//int		i;/* <--- utile pour les print, donc à supprimer */
+	//int		i;/* <--- utile pour les print, donc à supprimer */1]
 	//int		j;/* <--- utile pour les print, donc à supprimer */
 	int			start;
 	lexer		*word;

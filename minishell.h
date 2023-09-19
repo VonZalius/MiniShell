@@ -9,6 +9,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
+# include "executor/mini_shell.h"
 
 typedef struct mini mini;
 struct mini
@@ -26,6 +27,7 @@ struct lexer
 	int		cmd_check;
     int		index;
 	int		i;
+	int		good;
 	char	*word;
 	char	**arg;
 	int		fdread;
