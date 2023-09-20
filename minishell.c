@@ -628,6 +628,9 @@ int	last_check(char *cmd, lexer *word, int start, int is_pipe)
 void main_while(char *cmd, lexer *word, lexer *save, int start)
 {
 	int		t;
+	char		oldpwd[1024];
+	char		**environ_copy;
+	extern char 		**environ;
 	int		i;/* <--- utile pour les print, donc à supprimer */
 	int		j;/* <--- utile pour les print, donc à supprimer */
 
@@ -671,6 +674,7 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			   \XX/
 		        \/		*/
 
+		environ_copy = duplicate_environ(environ);
 
 		if (word->word == NULL)
 		{
@@ -683,11 +687,11 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			//continue ;
 		}
 
-		/*else if (strcmp(word->word, "cd") == 0)
+		else if (strcmp(word->word, "cd") == 0)
 		{
 			execute_cd(&word->arg[-1], oldpwd);
 			//continue ;
-		}*/
+		}
 
 		else if (strcmp(word->word, "pwd") == 0)
 		{
@@ -695,7 +699,7 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			//continue ;
 		}
 
-		/*else if (strcmp(word->word, "export") == 0)
+		else if (strcmp(word->word, "export") == 0)
 		{
 			execute_export(&word->arg[-1], &environ_copy);
 			//continue ;
@@ -711,33 +715,12 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 		{
 			execute_env(environ);
 			//continue ;
-		}*/
+		}
 
 		else if (strcmp(word->word, "exit") == 0)
 		{
 			execute_exit(&word->arg[-1]);
 		}
-
-		// Exécuter des commandes externes en utilisant fork et execve
-		/*pid_t pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			//continue ;
-		}
-		else if (pid == 0)
-		{
-			// Processus enfant
-			execvp(word->word, &word->arg[-1]);
-			perror("execvp");
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			// Processus parent
-			wait(NULL);
-		}*/
-
 
 		/*      /\ 
 			   /XX\ 
