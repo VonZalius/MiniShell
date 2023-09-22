@@ -20,7 +20,7 @@ CC = gcc
 RM = rm -f
 CFLAGS = -Wextra -Wall -Werror
 INCLUDES = -Iincludes
-LIBRARIES = -Llibft -lft -lreadline
+LIBRARIES = -Llibft -lft -lreadline -L/Users/abarras/.brew/opt/readline/lib -I/Users/abarras/.brew/opt/readline/include
 LIBFT = libft
 
 all: $(NAME)

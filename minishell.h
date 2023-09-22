@@ -1,9 +1,9 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include <fcntl.h>
 # include <signal.h>
-# include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <readline/readline.h>
@@ -46,6 +46,7 @@ int	how_many_arg(char *cmd, int i_bis, int j);
 int skip_from_until(lexer *word, char *cmd, char that, char this);
 void	ft_free_lexer(lexer *word, char *cmd);
 void  INThandler(int sig);
+void  rl_replace_line(const char *text, int clear_undo);
 
 
 #endif

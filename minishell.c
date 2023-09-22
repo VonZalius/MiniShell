@@ -625,6 +625,7 @@ int	last_check(char *cmd, lexer *word, int start, int is_pipe)
 	return (is_pipe);
 }
 
+
 void main_while(char *cmd, lexer *word, lexer *save, int start)
 {
 	int		t;
@@ -636,6 +637,7 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 
 	t = nbr_of_pipe(cmd);
 	j = t; /* <--- utile pour les print, donc à supprimer */
+	i = 0;/* <--- utile pour les print, donc à supprimer */
 	while (t != 0)
 	{
 		word = struct_init(word, t);
@@ -678,7 +680,8 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 
 		if (word->word == NULL)
 		{
-			t = t;
+			t++;
+			t--;
 		}
 
 		else if (strcmp(word->word, "echo") == 0)
