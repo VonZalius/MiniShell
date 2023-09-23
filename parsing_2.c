@@ -11,7 +11,10 @@ int h_m_a_bis(char *cmd, int i_bis)
 	else if (cmd[i_bis] == '<' || cmd[i_bis] == '>')
 	{
 		//printf("X - - - - - >  '<' or '>' detected [%c]\n", cmd[i_bis]);
-		i_bis++;
+		while (cmd[i_bis] == '<' || cmd[i_bis] == '>')
+			i_bis++;
+		while (cmd[i_bis] == ' ')
+			i_bis++;
 		while(cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
 			i_bis++;
 	}

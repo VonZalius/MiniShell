@@ -36,6 +36,8 @@ int open_fdwrite(lexer *word, char *cmd, char token)
 
 	while (cmd[word->i] == token)
 		word->i++;
+	while (cmd[word->i] == ' ')
+		word->i++;
 	clone = word->i;
 	i = open_fw_bis(cmd, word, 0);
 	word->i = clone;

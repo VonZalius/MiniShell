@@ -17,6 +17,10 @@ int	cmd_jump_over(char *cmd, lexer *word)
 	{
 		printf("- - - - - >  '<' or '>' detected [%c]\n", cmd[word->i]);
 		word->i++;
+		while (cmd[word->i] == '<' || cmd[word->i] == '>')
+			word->i++;
+		while (cmd[word->i] == ' ')
+			word->i++;
 		while(cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
 			word->i++;
 	}
