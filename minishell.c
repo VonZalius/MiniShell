@@ -636,110 +636,119 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 	t = nbr_of_pipe(cmd);
 	j = t; /* <--- utile pour les print, donc à supprimer */
 	i = 0;/* <--- utile pour les print, donc à supprimer */
+
+	//Ici on initialise les Structures
 	while (t != 0)
 	{
 		word = struct_init(word, t);
 		t--;
 		i++;
 	}
+
 	t = 1;
+
+	//Ici on séquence l'input !!
 	while (t > 0)
 	{
 		cmd = env_write_read(cmd, word, start);
 		if (word->good == 1)
 		{
 			t = last_check(cmd, word, start, t);
-			if (t > 0)
-			{
-				printf("WE FIND A PIPE ! ABOOOOORT MISSION !\n"); /* <--- à supprimer */
-				start = t + 1;
-				save = word;
-				word = word->next;
-				word->prev = save;
-			}
 		}
 		else
 			t = 0;
-	}
+	
 
-	printf("Nbr of Arg = %i\n", how_many_arg(cmd, i, 0));
-	if (word->good == 1)
-	{
-		printf("\n   RESULTAT !!!\n\n");
-		/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
-			   |XX|
-			   |XX|
-			   |XX|
-			 \XXXXXX/
-		 	  \XXXX/
-			   \XX/
-		        \/		*/
+	//printf("Nbr of Arg = %i\n", how_many_arg(cmd, i, 0));
 
-
-		if (word->word == NULL)
+	//Ici on lance l'execution !!!
+		if (word->good == 1)
 		{
-			t++;
-			t--;
-		}
+			printf("\n   RESULTAT !!!\n\n");
+			/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
+				   |XX|
+				   |XX|
+				   |XX|
+				 \XXXXXX/
+			 	  \XXXX/
+				   \XX/
+			        \/		*/
 
-		else if (strcmp(word->word, "echo") == 0)
-		{
-			execute_echo(&word->arg[-1], word->fdwrite);
-			//continue ;
-		}
 
-		else if (strcmp(word->word, "cd") == 0)
-		{
-			execute_cd(&word->arg[-1], oldpwd);
-			//continue ;
-		}
+			if (word->word == NULL)
+			{
+				t++;
+				t--;
+			}
 
-		else if (strcmp(word->word, "pwd") == 0)
-		{
-			execute_pwd(word->fdwrite);
-			//continue ;
-		}
+			else if (strcmp(word->word, "echo") == 0)
+			{
+				execute_echo(&word->arg[-1], word->fdwrite);
+				//continue ;
+			}
 
-		else if (strcmp(word->word, "export") == 0)
-		{
-			execute_export(&word->arg[-1], &environ, word->fdwrite);
-			//continue ;
-		}
+			else if (strcmp(word->word, "cd") == 0)
+			{
+				execute_cd(&word->arg[-1], oldpwd);
+				//continue ;
+			}
 
-		else if (strcmp(word->word, "unset") == 0)
-		{
-			execute_unset(&word->arg[-1], &environ);
-			//continue ;
-		}
+			else if (strcmp(word->word, "pwd") == 0)
+			{
+				execute_pwd(word->fdwrite);
+				//continue ;
+			}
 
-		else if (strcmp(word->word, "env") == 0)
-		{
-			execute_env(environ, word->fdwrite);
-			//continue ;
-		}
+			else if (strcmp(word->word, "export") == 0)
+			{
+				execute_export(&word->arg[-1], &environ, word->fdwrite);
+				//continue ;
+			}
 
-		else if (strcmp(word->word, "exit") == 0)
-		{
-			execute_exit(&word->arg[-1]);
-		}
+			else if (strcmp(word->word, "unset") == 0)
+			{
+				execute_unset(&word->arg[-1], &environ);
+				//continue ;
+			}
+
+			else if (strcmp(word->word, "env") == 0)
+			{
+				execute_env(environ, word->fdwrite);
+				//continue ;
+			}
+
+			else if (strcmp(word->word, "exit") == 0)
+			{
+				execute_exit(&word->arg[-1]);
+			}
 
 		//Execution commande de base (j'imagine)
-		else
-		{
-			ft_other(word, environ);
-		}
+			else
+			{
+				ft_other(word, environ);
+			}
 
-		/*      /\ 
-			   /XX\ 
-		 	  /XXXX\		
-			 /XXXXXX\ 
-			   |XX|
-			   |XX|
-			   |XX|
-		LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
-		printf("\n   FIN DES RESULTAT !!!\n");
+			/*      /\ 
+				   /XX\ 
+			 	  /XXXX\		
+				 /XXXXXX\ 
+				   |XX|
+				   |XX|
+				   |XX|
+			LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
+			printf("\n   FIN DES RESULTAT !!!\n");
+		}
+		if (t > 0 && word->good == 1)
+		{
+			printf("\nWE FIND A PIPE ! ABOOOOORT MISSION ! ----------------------\n\n"); /* <--- à supprimer */
+			start = t + 1;
+			save = word;
+			word = word->next;
+			word->prev = save;
+		}
 	}
-	//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à supprimer ???
+
+	//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à mettre dans le free_lexer ???
 		if (word->fdwrite != 0)
 			close(word->fdwrite);
 		if (word->fdread != 0)
