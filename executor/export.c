@@ -109,7 +109,7 @@ void	replace_variable(char *var, char ***environ)
 
 //Exécute la commande export en affichant les variables d'environnement
 //ou en les mettant à jour
-void	execute_export(char **args, char ***environ)
+void	execute_export(char **args, char ***environ, int fd)
 {
 	char	**env;
 
@@ -118,7 +118,9 @@ void	execute_export(char **args, char ***environ)
 		env = *environ;
 		while (*env != NULL)
 		{
-			printf("%s\n", *env);
+			write_fd(*env, fd);
+			write(fd, "\n", 1);
+			//printf("%s\n", *env);
 			env++;
 		}
 	}

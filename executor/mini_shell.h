@@ -24,16 +24,17 @@
 # define MAX_INPUT_LENGTH 1024
 # define MAX_ARGS 64
 
-void	execute_echo(char **args);
+void	execute_echo(char **args, int fd);
 void	execute_cd(char **args, char *oldpwd);
-void	execute_pwd(void);
-void	execute_export(char **args, char ***environ);
+void	execute_pwd(int fd);
+void	execute_export(char **args, char ***environ, int fd);
 void	execute_unset(char **args, char ***environ);
-void	execute_env(char **environ);
+void	execute_env(char **environ, int fd);
 void	execute_exit(char **args);
 void	malloc_error(char **error);
 void	malloc_error_1(char *error);
 void	free_environ(char **environ);
 char	**duplicate_environ(char **environ);
+void	write_fd(char *str, int fd);
 
 #endif

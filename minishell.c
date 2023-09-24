@@ -625,12 +625,10 @@ int	last_check(char *cmd, lexer *word, int start, int is_pipe)
 	return (is_pipe);
 }
 
-
 void main_while(char *cmd, lexer *word, lexer *save, int start)
 {
 	int		t;
 	char		oldpwd[1024];
-	char		**environ_copy;
 	extern char 		**environ;
 	int		i;/* <--- utile pour les print, donc à supprimer */
 	int		j;/* <--- utile pour les print, donc à supprimer */
@@ -664,6 +662,7 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			t = 0;
 	}
 
+	printf("Nbr of Arg = %i\n", how_many_arg(cmd, i, 0));
 	if (word->good == 1)
 	{
 		printf("\n   RESULTAT !!!\n\n");
@@ -676,7 +675,6 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			   \XX/
 		        \/		*/
 
-		environ_copy = duplicate_environ(environ);
 
 		if (word->word == NULL)
 		{
@@ -686,7 +684,7 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 
 		else if (strcmp(word->word, "echo") == 0)
 		{
-			execute_echo(&word->arg[-1]);
+			execute_echo(&word->arg[-1], word->fdwrite);
 			//continue ;
 		}
 
@@ -698,13 +696,13 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 
 		else if (strcmp(word->word, "pwd") == 0)
 		{
-			execute_pwd();
+			execute_pwd(word->fdwrite);
 			//continue ;
 		}
 
 		else if (strcmp(word->word, "export") == 0)
 		{
-			execute_export(&word->arg[-1], &environ_copy);
+			execute_export(&word->arg[-1], &environ, word->fdwrite);
 			//continue ;
 		}
 
@@ -716,13 +714,19 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 
 		else if (strcmp(word->word, "env") == 0)
 		{
-			execute_env(environ);
+			execute_env(environ, word->fdwrite);
 			//continue ;
 		}
 
 		else if (strcmp(word->word, "exit") == 0)
 		{
 			execute_exit(&word->arg[-1]);
+		}
+
+		//Execution commande de base (j'imagine)
+		else
+		{
+			ft_other(word, environ);
 		}
 
 		/*      /\ 
@@ -756,6 +760,7 @@ void main_while(char *cmd, lexer *word, lexer *save, int start)
 			printf("Fdwrite : %i\n", word->fdwrite);
 			//printf("howmanyarg : %i\n", how_many_arg(cmd, 0, 0));
 			t = 0;
+			printf("Nbr of Arg = %i\n", how_many_arg(cmd, i, 0));
 			while (t < (how_many_arg(cmd, i, 0)))
 			{
 				printf("Arg : %s\n", word->arg[t]);

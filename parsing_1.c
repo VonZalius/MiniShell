@@ -128,6 +128,7 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 	word->arg = (char **)malloc(sizeof(char *) * (j + 1));
 	if (word->arg == NULL)
 		return (0);
+	word->arg[j] = NULL;
 	word->cmd_check = 0;
 	return(cmd_big_while(cmd, word, index_arg, i_bis));
 }

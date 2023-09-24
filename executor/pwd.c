@@ -12,14 +12,24 @@
 
 #include "mini_shell.h"
 
-void	execute_pwd(void)
+void	execute_pwd(int fd)
 {
 	char	cwd[1024];
+	int		j;
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("pwd");
 		return ;
 	}
-	printf("%s\n", cwd);
+
+
+	j = 0;
+	while(cwd[j])
+	{
+		write(fd, &cwd[j], 1);
+		j++;
+	}
+
+	//printf("%s\n", cwd);
 }

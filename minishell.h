@@ -47,6 +47,7 @@ int skip_from_until(lexer *word, char *cmd, char that, char this);
 void	ft_free_lexer(lexer *word, char *cmd);
 void  INThandler(int sig);
 void  rl_replace_line(const char *text, int clear_undo);
+void ft_other(lexer *word, char **environ);
 
 
 #endif

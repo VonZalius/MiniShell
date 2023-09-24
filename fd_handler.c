@@ -28,7 +28,7 @@ char	*open_fw_bis2(char *cmd, lexer *word, int i, char *file)
 	return (file);
 }
 
-int open_fdwrite(lexer *word, char *cmd, char token)
+int open_fdwrite(lexer *word, char *cmd, char token, int nb)
 {
 	char	*file;
 	int clone;
@@ -46,8 +46,10 @@ int open_fdwrite(lexer *word, char *cmd, char token)
 		return (0);
 	i = 0;
 	file = open_fw_bis2(cmd, word, i, file);
-	if (token == '>')
-		clone = open(file, O_CREAT, 0777);
+	if (token == '>' && nb == 1)
+		clone = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	if (token == '>' && nb == 2)
+		clone = open(file, O_WRONLY | O_APPEND | O_CREAT, 0777);
 	if (token == '<')
 		clone = open(file, 0);	
 	free(file);
@@ -89,7 +91,10 @@ int	search_for_fdwrite(lexer *word, char *cmd, int start)
 			return (0);
 		if (cmd[word->i] == '>')
 		{	
-			word->fdwrite = open_fdwrite(word, cmd, '>');
+			if(cmd[word->i + 1] == '>')
+				word->fdwrite = open_fdwrite(word, cmd, '>', 2);
+			else
+				word->fdwrite = open_fdwrite(word, cmd, '>', 1);
 			if (word->fdwrite == -1)
 				return (0);
 		}
@@ -109,7 +114,7 @@ int	search_for_fdread(lexer *word, char *cmd, int start)
 			return (0);
 		if (cmd[word->i] == '<')
 		{
-			word->fdread = open_fdwrite(word, cmd, '<');
+			word->fdread = open_fdwrite(word, cmd, '<', 0);
 			if (word->fdread == -1)
 				return (0);
 		}

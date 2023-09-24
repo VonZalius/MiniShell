@@ -12,14 +12,16 @@
 
 #include "mini_shell.h"
 
-void	execute_env(char **environ)
+void	execute_env(char **environ, int fd)
 {
 	char	**env;
 
 	env = environ;
 	while (*env != NULL)
 	{
-		printf("%s\n", *env);
+		write_fd(*env, fd);
+			write(fd, "\n", 1);
+		//printf("%s\n", *env);
 		env++;
 	}
 }
