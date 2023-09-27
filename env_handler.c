@@ -104,8 +104,31 @@ char	*s_f_e_bis(char *cmd, lexer *word)
 	return(cmd);
 }
 
+char	*dollar()
+{
+	char *buffer;
+    int bytesRead;
+	int	fd;
+
+	fd = open("pipe_handler", 0);
+	if (fd < 0)
+		return (NULL);
+	buffer = malloc(sizeof(char) * 1024);
+    bytesRead = read(fd, buffer, 1024);
+	buffer[bytesRead] = '\0';
+	close(fd);
+	if (bytesRead <= 0)
+	{
+		free(buffer);
+		return (NULL);
+	}
+    return (buffer);
+}
+
 char	*search_for_env(lexer *word, char *cmd, int start)
 {
+	char *ddollar;
+
 	printf("-> search_for_env...\n");
 	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
@@ -121,12 +144,18 @@ char	*search_for_env(lexer *word, char *cmd, int start)
 			}
 		}
 		if (cmd[word->i] == '$' && cmd[word->i + 1] == '?')
-			word->i = word->i + 2;
-		cmd = s_f_e_bis(cmd, word);
+		{
+			ddollar = dollar();
+			if(ddollar == NULL)
+				return (NULL);
+			cmd = ft_strinsert(cmd, ddollar, word->i);
+			free (ddollar);
+		}
+		else
+			cmd = s_f_e_bis(cmd, word);
 		if (cmd == NULL)
 			return (NULL);
 		word->i++;
 	}
-	//free (str2);
 	return (cmd);
 }

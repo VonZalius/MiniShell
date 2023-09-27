@@ -104,7 +104,7 @@ int	search_for_fdwrite(lexer *word, char *cmd, int start)
 	return (1);
 }
 
-int	search_for_fdread(lexer *word, char *cmd, int start)
+int search_for_fdread(lexer *word, char *cmd, int start)
 {
 	printf("-> search_for_fdread...\n");
 	word->i = start;
@@ -114,9 +114,20 @@ int	search_for_fdread(lexer *word, char *cmd, int start)
 			return (0);
 		if (cmd[word->i] == '<')
 		{
-			word->fdread = open_fdwrite(word, cmd, '<', 0);
-			if (word->fdread == -1)
-				return (0);
+			if (cmd[word->i + 1] == '<')
+			{
+				if (ft_double(cmd) == 0)
+					return (0);
+				word->i++;
+			}
+			else
+			{
+				word->fdread = open_fdwrite(word, cmd, '<', 0);
+				if (word->fdread == -1)
+					return (0);
+				if (dup2(word->fdread, STDIN_FILENO) < 0)
+					return (0);
+			}
 		}
 		word->i++;
 	}

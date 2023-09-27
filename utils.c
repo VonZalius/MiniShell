@@ -26,6 +26,7 @@ void	ft_free_lexer(lexer *word, char *cmd)
 {
 	lexer		*temp;
 	int			i;
+	int			j;
 
 	while (word != NULL)
 	{
@@ -43,6 +44,12 @@ void	ft_free_lexer(lexer *word, char *cmd)
 		free(temp);
 	}
 	free (cmd);
+	j = open("pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
+	j = open("double_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
+	j = open("pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
 }
 
 void  INThandler(int sig)

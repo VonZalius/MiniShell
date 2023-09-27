@@ -59,19 +59,19 @@ void ft_other(lexer *word, char **environ)
 {
 	pid_t pid;
 	char* 		full_path;
-	char		**environ_copy;
+	//char		**environ_copy;
 
     pid = fork();
-	environ_copy = duplicate_environ(environ);
+	//environ_copy = duplicate_environ(environ);
 	if (pid == -1)
 		perror("fork");
 	else if (pid == 0)
 	{
 		word->arg[-1] = word->word;
-		full_path = find_command_path(word->arg[-1], environ_copy);
+		full_path = find_command_path(word->arg[-1], environ);
 		if (full_path)
 		{
-			execve(full_path, &word->arg[-1], environ_copy);
+			execve(full_path, &word->arg[-1], environ);
 			free(full_path);
 		}
 		else

@@ -20,6 +20,7 @@ lexer	*struct_init(lexer *prevew, int i)
 	lexer_word->i = 0;
 	lexer_word->fdread = 0;
 	lexer_word->fdwrite = 0;
+	lexer_word->fdpipe = 0;
 	lexer_word->arg = NULL;
 	lexer_word->index = i;
 	lexer_word->word = NULL;
