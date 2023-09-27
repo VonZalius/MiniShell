@@ -127,12 +127,20 @@ char	*dollar()
 
 char	*search_for_env(lexer *word, char *cmd, int start)
 {
-	char *ddollar;
+	char	*ddollar;
+	int		check;
 
-	printf("-> search_for_env...\n");
+	//printf("-> search_for_env...\n");
 	word->i = start;
-	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
+	check = 0;
+	while (cmd[word->i] != '\0')
 	{
+		if (cmd[word->i] == '\"' && check == 0)
+			check = 1;
+		else if (cmd[word->i] == '\"' && check == 1)
+			check = 0;
+		if (cmd[word->i] == '|' && check == 0)
+			return (cmd);
 		if (cmd[word->i] == '\'')
 		{
 			word->i++;

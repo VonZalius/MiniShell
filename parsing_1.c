@@ -4,18 +4,18 @@ int	cmd_jump_over(char *cmd, lexer *word)
 {
 	if (cmd[word->i] == '|')
 	{
-		printf("- - - - - >  Pipe detected [%c]\n", cmd[word->i]);
+		//printf("- - - - - >  Pipe detected [%c]\n", cmd[word->i]);
 		return (word->i);
 	}
 	else if (cmd[word->i] == ' ')
 	{
-		printf("- - - - - >  Space detected [%c]\n", cmd[word->i]);
+		//printf("- - - - - >  Space detected [%c]\n", cmd[word->i]);
 		while (cmd[word->i] == ' ')
 			word->i++;
 	}
 	else if (cmd[word->i] == '<' || cmd[word->i] == '>')
 	{
-		printf("- - - - - >  '<' or '>' detected [%c]\n", cmd[word->i]);
+		//printf("- - - - - >  '<' or '>' detected [%c]\n", cmd[word->i]);
 		word->i++;
 		while (cmd[word->i] == '<' || cmd[word->i] == '>')
 			word->i++;
@@ -95,7 +95,7 @@ int	cmd_big_while(char *cmd, lexer *word, int index_arg, int i_bis)
 			return (k);
 		if(k == -1)
 		{
-			printf("- - - - - >  Word or Argumet detected [%c]\n", cmd[word->i]);
+			//printf("- - - - - >  Word or Argumet detected [%c]\n", cmd[word->i]);
 			i_bis = cmd_while_for_len(cmd, word->i);
 			if (cmd_malloc(word, i_bis, index_arg) == 0)
 				return (0);
@@ -132,193 +132,3 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 	word->cmd_check = 0;
 	return(cmd_big_while(cmd, word, index_arg, i_bis));
 }
-		/*else if (cmd[word->i] == '\"' && word->cmd_check == 0)
-		{
-			i_bis++;
-			while (cmd[i_bis] != '\"' && cmd[i_bis] != '\0')
-				i_bis++;
-			word->word = malloc(sizeof(char) * i_bis - word->i + 1);
-			if (word->word == NULL)
-				return (0);
-			word->i++;
-			i_bis = 0;
-			while (cmd[word->i] != '\"')
-			{
-				word->word[i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->i++;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-			{
-				word->word[i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->word[i_bis] = '\0';
-			word->cmd_check = 1;
-		}
-		else if (cmd[word->i] == '\'' && word->cmd_check == 0)
-		{
-			i_bis++;
-			while (cmd[i_bis] != '\'' && cmd[i_bis] != '\0')
-				i_bis++;
-			word->word = malloc(sizeof(char) * i_bis - word->i + 1);
-			if (word->word == NULL)
-				return (0);
-			word->i++;
-			i_bis = 0;
-			while (cmd[word->i] != '\'')
-			{
-				word->word[i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->i++;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-			{
-				word->word[i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->word[i_bis] = '\0';
-			word->cmd_check = 1;
-		}
-		else if (word->cmd_check == 0 && cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-		{
-			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
-				i_bis++;
-			word->word = malloc(sizeof(char) * i_bis - word->i + 1);
-			if (word->word == NULL)
-				return (0);
-			i_bis = 0;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-			{
-				word->word[i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->word[i_bis] = '\0';
-			word->cmd_check = 1;
-		}
-
-
-		else if (cmd[word->i] == '<' || cmd[word->i] == '>')
-		{
-			word->i++;
-			while(cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-				word->i++;
-		}
-		else if (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '\"'  && cmd[word->i] != '\'' && cmd[word->i] != '<' && cmd[word->i] != '>' && word->cmd_check != 0)
-		{
-			//word->i++;
-			//i_bis++;
-			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
-				i_bis++;
-			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
-			if (word->arg[index_arg] == NULL)
-				return (0);
-			i_bis = 0;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-			{
-				word->arg[index_arg][i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->arg[index_arg][i_bis] = '\0';
-			index_arg++;
-		}
-		else if (cmd[word->i] == '\"' && word->cmd_check != 0)
-		{
-			i_bis++;
-			while (cmd[i_bis] != '\"' && cmd[i_bis] != '\0')
-				i_bis++;
-			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
-			if (word->arg[index_arg] == NULL)
-				return (0);
-			word->i++;
-			i_bis = 0;
-			while (cmd[word->i] != '\"')
-			{
-				word->arg[index_arg][i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->i++;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-			{
-				word->arg[index_arg][i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->arg[index_arg][i_bis] = '\0';
-			index_arg++;
-		}
-		else if (cmd[word->i] == '\'' && word->cmd_check != 0)
-		{
-			i_bis++;
-			while (cmd[i_bis] != '\'' && cmd[i_bis] != '\0')
-				i_bis++;
-			word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
-			if (word->arg[index_arg] == NULL)
-				return (0);
-			word->i++;
-			i_bis = 0;
-			while (cmd[word->i] != '\'')
-			{
-				word->arg[index_arg][i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->i++;
-			while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-			{
-				word->arg[index_arg][i_bis] = cmd[word->i];
-				word->i++;
-				i_bis++;
-			}
-			word->arg[index_arg][i_bis] = '\0';
-			index_arg++;
-		}*/
-		/*else if (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '-' && cmd[word->i] != '\"'  && cmd[word->i] != '\'' && cmd[word->i] != '<' && cmd[word->i] != '>')
-		{  
-			if (word->cmd_check != 0)
-			{
-				while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
-					i_bis++;
-				word->arg[index_arg] = malloc(sizeof(char) * i_bis - word->i + 1);
-				if (word->arg[index_arg] == NULL)
-					return (0);
-				i_bis = 0;
-				while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-				{
-					word->arg[index_arg][i_bis] = cmd[word->i];
-					word->i++;
-					i_bis++;
-				}
-				word->arg[index_arg][i_bis] = '\0';
-				word->i++;
-				index_arg++;
-				word->cmd_check++;
-			}
-			
-			else
-			{
-				while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
-					i_bis++;
-				word->word = malloc(sizeof(char) * i_bis - word->i + 1);
-				if (word->word == NULL)
-					return (0);
-				i_bis = 0;
-				while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
-				{
-					word->word[i_bis] = cmd[word->i];
-					word->i++;
-					i_bis++;
-				}
-				word->word[i_bis] = '\0';
-				word->cmd_check = 1;
-			}
-		}*/
-		/*else
-			word->i++;*/

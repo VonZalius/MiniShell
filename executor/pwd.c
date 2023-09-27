@@ -30,6 +30,6 @@ void	execute_pwd(int fd)
 		write(fd, &cwd[j], 1);
 		j++;
 	}
-
+	write(fd, "\n", 1);
 	//printf("%s\n", cwd);
 }
