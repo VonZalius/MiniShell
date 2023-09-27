@@ -24,6 +24,7 @@ struct mini
 typedef struct lexer lexer;
 struct lexer
 {
+	int		quot_check;
 	int		cmd_check;
     int		index;
 	int		i;
