@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	free_array(char **arr)
+/*void	free_array(char **arr)
 {
 	int	i;
 
@@ -23,7 +23,7 @@ void	free_array(char **arr)
 		i++;
 	}
 	free(arr);
-}
+}*/
 
 int	skip_from_until(t_lexer *word, char *cmd, char that, char this)
 {

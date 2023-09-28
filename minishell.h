@@ -64,5 +64,7 @@ char	*ft_strinsert_fd(char *str1, char *str2, int pos);
 int		ft_double(char *cmd);
 char	*ft_strcat(char *dest, const char *src);
 void	free_array(char **arr);
+char	*ft_strinsert(char *str1, char *str2, int pos);
+char    *dollar_search(char *cmd, t_lexer *word);
 
 #endif
