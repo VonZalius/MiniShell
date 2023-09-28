@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_2.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/28 13:07:25 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 13:21:42 by cmansey          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int h_m_a_bis(char *cmd, int i_bis)
+int	h_m_a_bis(char *cmd, int i_bis)
 {
 	if (cmd[i_bis] == ' ')
 	{
@@ -15,7 +27,8 @@ int h_m_a_bis(char *cmd, int i_bis)
 			i_bis++;
 		while (cmd[i_bis] == ' ')
 			i_bis++;
-		while(cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+		while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0'
+			&& cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
 			i_bis++;
 	}
 	return (i_bis);
@@ -23,16 +36,16 @@ int h_m_a_bis(char *cmd, int i_bis)
 
 int	h_m_a_bis2(char *cmd, int i_bis)
 {
-	if(cmd[i_bis] == '\'')
+	if (cmd[i_bis] == '\'')
 	{
 		i_bis++;
-		while(cmd[i_bis] != '\'')
+		while (cmd[i_bis] != '\'')
 			i_bis++;
 	}
-	if(cmd[i_bis] == '\"')
+	if (cmd[i_bis] == '\"')
 	{
 		i_bis++;
-		while(cmd[i_bis] != '\"')
+		while (cmd[i_bis] != '\"')
 			i_bis++;
 	}
 	return (i_bis);
@@ -49,7 +62,8 @@ int	how_many_arg(char *cmd, int i_bis, int j)
 		else
 		{
 			//printf("X - - - - - >  Word or Argumet detected [%c]\n", cmd[i_bis]);
-			while(cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+			while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0'
+				&& cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
 			{
 				i_bis = h_m_a_bis2(cmd, i_bis);
 				i_bis++;

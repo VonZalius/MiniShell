@@ -1,21 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   struct_handler.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/28 12:20:48 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 12:23:24 by cmansey          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-lexer	*find_word(lexer *last_word, int i)
+t_lexer	*find_word(t_lexer *last_word, int i)
 {
-	if(last_word->index == i)
-		return(last_word);
+	if (last_word->index == i)
+		return (last_word);
 	return (find_word(last_word->prev, i));
 }
 
-lexer	*struct_init(lexer *prevew, int i)
+t_lexer	*struct_init(t_lexer *prevew, int i)
 {
-	lexer	*lexer_word;
+	t_lexer	*lexer_word;
 
 	lexer_word = malloc(sizeof(*lexer_word));
 	if (lexer_word == NULL)
 	{
 		free(lexer_word);
-		return(NULL);
+		return (NULL);
 	}
 	lexer_word->i = 0;
 	lexer_word->fdread = 0;

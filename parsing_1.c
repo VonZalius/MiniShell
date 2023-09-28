@@ -1,18 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_1.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/28 12:16:54 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 12:23:25 by cmansey          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	cmd_jump_over(char *cmd, lexer *word)
+int	cmd_jump_over(char *cmd, t_lexer *word)
 {
 	if (cmd[word->i] == '|')
-	{
 		//printf("- - - - - >  Pipe detected [%c]\n", cmd[word->i]);
 		return (word->i);
-	}
 	else if (cmd[word->i] == ' ')
-	{
 		//printf("- - - - - >  Space detected [%c]\n", cmd[word->i]);
 		while (cmd[word->i] == ' ')
 			word->i++;
-	}
 	else if (cmd[word->i] == '<' || cmd[word->i] == '>')
 	{
 		//printf("- - - - - >  '<' or '>' detected [%c]\n", cmd[word->i]);
@@ -21,7 +29,8 @@ int	cmd_jump_over(char *cmd, lexer *word)
 			word->i++;
 		while (cmd[word->i] == ' ')
 			word->i++;
-		while(cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i] != '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
+		while (cmd[word->i] != ' ' && cmd[word->i] != '\0' && cmd[word->i]
+			!= '|' && cmd[word->i] != '<' && cmd[word->i] != '>')
 			word->i++;
 	}
 	else
@@ -29,22 +38,23 @@ int	cmd_jump_over(char *cmd, lexer *word)
 	return (-2);
 }
 
-int cmd_while_for_len(char *cmd, int i_bis, lexer *word)
+int	cmd_while_for_len(char *cmd, int i_bis, t_lexer *word)
 {
-	while(cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|' && cmd[i_bis] != '<' && cmd[i_bis] != '>')
+	while (cmd[i_bis] != ' ' && cmd[i_bis] != '\0' && cmd[i_bis] != '|'
+		&& cmd[i_bis] != '<' && cmd[i_bis] != '>')
 	{
-		if(cmd[i_bis] == '\'')
+		if (cmd[i_bis] == '\'')
 		{
 			word->quot_check = 1;
 			i_bis++;
-			while(cmd[i_bis] != '\'')
+			while (cmd[i_bis] != '\'')
 				i_bis++;
 		}
-		if(cmd[i_bis] == '\"')
+		if (cmd[i_bis] == '\"')
 		{
 			word->quot_check = 1;
 			i_bis++;
-			while(cmd[i_bis] != '\"')
+			while (cmd[i_bis] != '\"')
 				i_bis++;
 		}
 		i_bis++;
@@ -52,9 +62,9 @@ int cmd_while_for_len(char *cmd, int i_bis, lexer *word)
 	return (i_bis);
 }
 
-int cmd_malloc(lexer *word, int i_bis, int index_arg)
+int	cmd_malloc(t_lexer *word, int i_bis, int index_arg)
 {
-	if(word->cmd_check == 0)
+	if (word->cmd_check == 0)
 	{
 		word->word = malloc(sizeof(char) * (i_bis - word->i + 1));
 		if (word->word == NULL)
@@ -66,14 +76,14 @@ int cmd_malloc(lexer *word, int i_bis, int index_arg)
 		if (word->arg[index_arg] == NULL)
 			return (0);
 	}
-	if(word->i == '\'' || word->i == '\"')
-				word->i++;
+	if (word->i == '\'' || word->i == '\"')
+		word->i++;
 	return (1);
 }
 
-int cmd_terminator(lexer *word, int index_arg, int k)
+int	cmd_terminator(t_lexer *word, int index_arg, int k)
 {
-	if(word->cmd_check == 0)
+	if (word->cmd_check == 0)
 	{
 		word->word[k] = '\0';
 		word->cmd_check = 1;
@@ -86,7 +96,7 @@ int cmd_terminator(lexer *word, int index_arg, int k)
 	return (index_arg);
 }
 
-int	cmd_big_while(char *cmd, lexer *word, int index_arg, int i_bis)
+int	cmd_big_while(char *cmd, t_lexer *word, int index_arg, int i_bis)
 {
 	int	k;
 
@@ -94,9 +104,9 @@ int	cmd_big_while(char *cmd, lexer *word, int index_arg, int i_bis)
 	{
 		word->quot_check = 0;
 		k = cmd_jump_over(cmd, word);
-		if (k > -1 )
+		if (k > -1)
 			return (k);
-		if(k == -1)
+		if (k == -1)
 		{
 			//printf("- - - - - >  Word or Argumet detected [%c]\n", cmd[word->i]);
 			i_bis = cmd_while_for_len(cmd, word->i, word);
@@ -109,9 +119,9 @@ int	cmd_big_while(char *cmd, lexer *word, int index_arg, int i_bis)
 				word->i++;
 				i_bis -= 2;
 			}
-			while(i_bis-- > 0)
+			while (i_bis-- > 0)
 			{
-				if(word->cmd_check == 0)
+				if (word->cmd_check == 0)
 					word->word[k++] = cmd[word->i++];
 				else
 					word->arg[index_arg][k++] = cmd[word->i++];
@@ -124,7 +134,7 @@ int	cmd_big_while(char *cmd, lexer *word, int index_arg, int i_bis)
 	return (-1);
 }
 
-int	cmd_in_struct(lexer *word, char *cmd, int start)
+int	cmd_in_struct(t_lexer *word, char *cmd, int start)
 {
 	int			i_bis;
 	int			j;
@@ -140,5 +150,5 @@ int	cmd_in_struct(lexer *word, char *cmd, int start)
 		return (0);
 	word->arg[j] = NULL;
 	word->cmd_check = 0;
-	return(cmd_big_while(cmd, word, index_arg, i_bis));
+	return (cmd_big_while(cmd, word, index_arg, i_bis));
 }

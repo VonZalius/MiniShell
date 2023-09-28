@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abarras <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 15:19:51 by abarras           #+#    #+#             */
-/*   Updated: 2022/10/28 16:39:21 by abarras          ###   ########.fr       */
+/*   Updated: 2023/09/28 15:02:19 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
 
-char	*ft_strdup(char *src)
+char	*ft_strdup(const char *src)
 {
 	int		i;
 	int		j;

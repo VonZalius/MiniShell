@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/04 16:01:40 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:23:17 by cmansey          ###   ########.fr       */
+/*   Created: 2023/09/28 12:33:57 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 12:36:03 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
-
-void	execute_pwd(int fd)
+int	ft_strcmp(char *s1, char *s2)
 {
-	char	cwd[1024];
-	int		j;
+	int	i;
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("pwd");
-		return ;
-	}
-	j = 0;
-	while (cwd[j])
-	{
-		write(fd, &cwd[j], 1);
-		j++;
-	}
-	write(fd, "\n", 1);
-	//printf("%s\n", cwd);
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
+		i++;
+	return (s1[i] - s2[i]);
 }

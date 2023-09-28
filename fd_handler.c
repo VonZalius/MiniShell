@@ -1,23 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fd_handler.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/28 12:08:39 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 12:10:50 by cmansey          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int open_fw_bis(char *cmd, lexer *word, int i)
+int	open_fw_bis(char *cmd, t_lexer *word, int i)
 {
-	while (cmd[word->i] != ' ' && cmd[word->i] != '<' && cmd[word->i] != '>' && cmd[word->i] != '|' && cmd[word->i] != '\0')
+	while (cmd[word->i] != ' ' && cmd[word->i] != '<'
+		&& cmd[word->i] != '>' && cmd[word->i] != '|' && cmd[word->i] != '\0')
 	{
-		if(cmd[word->i] != '\"' && cmd[word->i] != '\'')
+		if (cmd[word->i] != '\"' && cmd[word->i] != '\'')
 			i++;
 		word->i++;
 	}
 	return (i);
 }
 
-char	*open_fw_bis2(char *cmd, lexer *word, int i, char *file)
+char	*open_fw_bis2(char *cmd, t_lexer *word, int i, char *file)
 {
 	while (cmd[word->i] != ' ' && cmd[word->i] != '<'
 		&& cmd[word->i] != '>' && cmd[word->i] != '|'
 		&& cmd[word->i] != '\0')
 	{
-		if(cmd[word->i] != '\"' && cmd[word->i] != '\'')
+		if (cmd[word->i] != '\"' && cmd[word->i] != '\'')
 		{
 			file[i] = cmd[word->i];
 			i++;
@@ -28,11 +41,11 @@ char	*open_fw_bis2(char *cmd, lexer *word, int i, char *file)
 	return (file);
 }
 
-int open_fdwrite(lexer *word, char *cmd, char token, int nb)
+int	open_fdwrite(t_lexer *word, char *cmd, char token, int nb)
 {
 	char	*file;
-	int clone;
-	int i;
+	int		clone;
+	int		i;
 
 	while (cmd[word->i] == token)
 		word->i++;
@@ -51,12 +64,12 @@ int open_fdwrite(lexer *word, char *cmd, char token, int nb)
 	if (token == '>' && nb == 2)
 		clone = open(file, O_WRONLY | O_APPEND | O_CREAT, 0777);
 	if (token == '<')
-		clone = open(file, 0);	
+		clone = open(file, 0);
 	free(file);
 	return (clone);
 }
 
-int skip_quots(char *cmd, lexer *word)
+int	skip_quots(char *cmd, t_lexer *word)
 {
 	if (cmd[word->i] == '\"')
 	{
@@ -81,7 +94,7 @@ int skip_quots(char *cmd, lexer *word)
 	return (1);
 }
 
-int	search_for_fdwrite(lexer *word, char *cmd, int start)
+int	search_for_fdwrite(t_lexer *word, char *cmd, int start)
 {
 	//printf("-> search_for_fdwrite...\n");
 	word->i = start;
@@ -90,8 +103,8 @@ int	search_for_fdwrite(lexer *word, char *cmd, int start)
 		if (skip_quots(cmd, word) == 0)
 			return (0);
 		if (cmd[word->i] == '>')
-		{	
-			if(cmd[word->i + 1] == '>')
+		{
+			if (cmd[word->i + 1] == '>')
 				word->fdwrite = open_fdwrite(word, cmd, '>', 2);
 			else
 				word->fdwrite = open_fdwrite(word, cmd, '>', 1);
@@ -104,7 +117,7 @@ int	search_for_fdwrite(lexer *word, char *cmd, int start)
 	return (1);
 }
 
-int search_for_fdread(lexer *word, char *cmd, int start)
+int	search_for_fdread(t_lexer *word, char *cmd, int start)
 {
 	//printf("-> search_for_fdread...\n");
 	word->i = start;

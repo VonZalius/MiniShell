@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/04 16:01:40 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:23:17 by cmansey          ###   ########.fr       */
+/*   Created: 2023/09/28 12:48:23 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 15:02:26 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
-
-void	execute_pwd(int fd)
+char	*ft_strcat(char *dest, const char *src)
 {
-	char	cwd[1024];
-	int		j;
+	int	i;
+	int	j;
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("pwd");
-		return ;
-	}
+	i = 0;
+	while (dest[i] != '\0')
+		i++;
 	j = 0;
-	while (cwd[j])
+	while (src[j] != '\0')
 	{
-		write(fd, &cwd[j], 1);
+		dest[i + j] = src[j];
 		j++;
 	}
-	write(fd, "\n", 1);
-	//printf("%s\n", cwd);
+	dest[i + j] = '\0';
+	return (dest);
 }

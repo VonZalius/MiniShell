@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:06 by cmansey           #+#    #+#             */
-/*   Updated: 2023/08/07 17:43:18 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/28 15:02:29 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,25 @@
 // Libérer la mémoire allouée (si nécessaire)
 void	execute_exit(char **args)
 {
+	int	exit_value;
+
 	if (args[1] == NULL)
 	{
 		exit(EXIT_SUCCESS);
 	}
-	/*else
+	if (args[1] != NULL && args[2] != NULL)
+		printf("minishell: exit: too many arguments\n");
+	else
 	{
 		if (ft_isnum(args[1]))
 		{
-			int exit_value = atoi(args[1]);
-
-			// ATTENTION A MODIFIER POUR LIBERER MEMOIRE
-
-			// Quitter le programme avec le code de sortie spécifié
+			exit_value = atoi(args[1]);
 			exit(exit_value);
 		}
 		else
 		{
 			printf("minishell: exit: numeric argument required\n");
-			// ATTENTION A MODIFIER POUR LIBERER MEMOIRE
-
-			// Quitter le programme avec un code d'erreur
 			exit(EXIT_FAILURE);
 		}
-	}*/
+	}
 }

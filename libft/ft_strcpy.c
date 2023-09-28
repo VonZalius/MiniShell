@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/04 16:01:40 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:23:17 by cmansey          ###   ########.fr       */
+/*   Created: 2023/09/28 12:33:09 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 15:02:24 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
-
-void	execute_pwd(int fd)
+char	*ft_strcpy(char *dest, const char *src)
 {
-	char	cwd[1024];
-	int		j;
+	int	i;
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	i = 0;
+	while (src[i] != '\0')
 	{
-		perror("pwd");
-		return ;
+		dest[i] = src[i];
+		i++;
 	}
-	j = 0;
-	while (cwd[j])
-	{
-		write(fd, &cwd[j], 1);
-		j++;
-	}
-	write(fd, "\n", 1);
-	//printf("%s\n", cwd);
+	dest[i] = '\0';
+	return (dest);
 }

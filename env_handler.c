@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_handler.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/28 12:53:38 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 12:57:23 by cmansey          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int ft_len_of_$(char *str1)
+int	ft_len_of_dol(char *str1)
 {
 	int	i;
 	int	b;
@@ -9,10 +21,12 @@ int ft_len_of_$(char *str1)
 	b = 0;
 	while (str1[i] != '\0')
 	{
-		if(str1[i] == '$')
+		if (str1[i] == '$')
 		{
 			i++;
-			while(str1[i] != ' ' && str1[i] != '\0' && str1[i] != '"' && str1[i] != '|' && str1[i] != '<' && str1[i] != '>' && str1[i] != '$')
+			while (str1[i] != ' ' && str1[i] != '\0' && str1[i] != '"'
+				&& str1[i] != '|' && str1[i] != '<'
+				&& str1[i] != '>' && str1[i] != '$')
 			{
 				b++;
 				i++;
@@ -24,9 +38,9 @@ int ft_len_of_$(char *str1)
 	return (b);
 }
 
-void	ft_strinsert_bis(mini *mini, char *str1, char *str2, int pos)
+void	ft_strinsert_bis(t_mini *mini, char *str1, char *str2, int pos)
 {
-	while(mini->i != mini->len)
+	while (mini->i != mini->len)
 	{
 		if (mini->i != pos)
 		{
@@ -54,11 +68,11 @@ void	ft_strinsert_bis(mini *mini, char *str1, char *str2, int pos)
 
 char	*ft_strinsert(char *str1, char *str2, int pos)
 {
-	mini mini;
+	t_mini	mini;
 
 	if (str2 == NULL)
 		return (NULL);
-	mini.len = ft_strlen(str1) + ft_strlen(str2) - ft_len_of_$(str1);
+	mini.len = ft_strlen(str1) + ft_strlen(str2) - ft_len_of_dol(str1);
 	mini.final = malloc (sizeof(char) * (mini.len) + 1);
 	if (mini.final == NULL)
 		return (NULL);
@@ -73,12 +87,13 @@ char	*ft_strinsert(char *str1, char *str2, int pos)
 
 size_t	ft_strlen_space(const char *s, size_t i)
 {
-	while (s[i] != ' ' && s[i] != '\0' && s[i] != '|' && s[i] != '<' && s[i] != '>' && s[i] != '$')
+	while (s[i] != ' ' && s[i] != '\0' && s[i] != '|'
+		&& s[i] != '<' && s[i] != '>' && s[i] != '$')
 		i++;
 	return (i);
 }
 
-char	*s_f_e_bis(char *cmd, lexer *word)
+char	*s_f_e_bis(char *cmd, t_lexer *word)
 {
 	int		i;
 	int		j;
@@ -90,7 +105,8 @@ char	*s_f_e_bis(char *cmd, lexer *word)
 		word->i++;
 		j = word->i;
 		str2 = malloc(sizeof(char) * (ft_strlen_space(cmd, word->i) + 1));
-		while (cmd[j] != '\0' && cmd[j] != ' ' && cmd[j] != '"' && cmd[j] != '|' && cmd[j] != '<' && cmd[j] != '>' && cmd[j] != '$')
+		while (cmd[j] != '\0' && cmd[j] != ' ' && cmd[j] != '"'
+			&& cmd[j] != '|' && cmd[j] != '<' && cmd[j] != '>' && cmd[j] != '$')
 		{
 			str2[i] = cmd[j];
 			i++;
@@ -101,31 +117,31 @@ char	*s_f_e_bis(char *cmd, lexer *word)
 		if (cmd == NULL)
 			return (NULL);
 	}
-	return(cmd);
+	return (cmd);
 }
 
 char	*dollar()
 {
-	char *buffer;
-    int bytesRead;
-	int	fd;
+	char	*buffer;
+	int		bytes_read;
+	int		fd;
 
 	fd = open("pipe_handler", 0);
 	if (fd < 0)
 		return (NULL);
 	buffer = malloc(sizeof(char) * 1024);
-    bytesRead = read(fd, buffer, 1024);
-	buffer[bytesRead] = '\0';
+	bytes_read = read(fd, buffer, 1024);
+	buffer[bytes_read] = '\0';
 	close(fd);
-	if (bytesRead <= 0)
+	if (bytes_read <= 0)
 	{
 		free(buffer);
 		return (NULL);
 	}
-    return (buffer);
+	return (buffer);
 }
 
-char	*search_for_env(lexer *word, char *cmd, int start)
+char	*search_for_env(t_lexer *word, char *cmd, int start)
 {
 	char	*ddollar;
 	int		check;
@@ -154,7 +170,7 @@ char	*search_for_env(lexer *word, char *cmd, int start)
 		if (cmd[word->i] == '$' && cmd[word->i + 1] == '?')
 		{
 			ddollar = dollar();
-			if(ddollar == NULL)
+			if (ddollar == NULL)
 				return (NULL);
 			cmd = ft_strinsert(cmd, ddollar, word->i);
 			free (ddollar);

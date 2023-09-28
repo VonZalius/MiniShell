@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abarras <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 16:08:47 by abarras           #+#    #+#             */
-/*   Updated: 2022/11/04 12:54:13 by abarras          ###   ########.fr       */
+/*   Updated: 2023/09/28 14:56:15 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_putendl_fd(char *s, int fd);
 
 void	ft_putnbr_fd(int n, int fd);
 
-char	*ft_strdup(char *src);
+char	*ft_strdup(const char *src);
 
 char	*ft_strjoin(char const *s1, char const *s2);
 
@@ -85,5 +85,15 @@ char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
+
+char	*ft_strcpy(char *dest, const char *src);
+
+int		ft_strcmp(char *s1, char *s2);
+
+char	*ft_strncpy(char *dest, char *src, unsigned int n);
+
+char	*ft_strcat(char *dest, const char *src);
+
+int		ft_isnum(char *str);
 
 #endif

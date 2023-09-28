@@ -6,7 +6,7 @@
 #    By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/24 14:27:20 by cmansey           #+#    #+#              #
-#    Updated: 2023/06/26 12:20:30 by cmansey          ###   ########.fr        #
+#    Updated: 2023/09/28 14:32:05 by cmansey          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ $(LIBRARIES) -o $(NAME)
 
 debug: $(OBJ)
-	$(CC) $(CFLAGS) $(INCLUDES) -fsanitize=address $^ $(LIBRARIES) -o $(NAME)
+	@make -C $(LIBFT)
+	$(CC) $(CFLAGS) $(INCLUDES) -fsanitize=address -fno-omit-frame-pointer $^ $(LIBRARIES) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@

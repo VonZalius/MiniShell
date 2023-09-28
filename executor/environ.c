@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:25:01 by cmansey           #+#    #+#             */
-/*   Updated: 2023/08/07 22:28:43 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/28 12:40:59 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	**duplicate_environ(char **environ)
 	i = 0;
 	while (i < env_size)
 	{
-		new_environ[i] = strdup(environ[i]);
+		new_environ[i] = ft_strdup(environ[i]);
 		if (!new_environ[i])
 			malloc_error(new_environ);
 		i++;

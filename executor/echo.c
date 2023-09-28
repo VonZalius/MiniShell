@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:13 by cmansey           #+#    #+#             */
-/*   Updated: 2023/08/07 22:30:28 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/28 12:40:05 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	write_fd(char *str, int fd)
 	int	j;
 
 	j = 0;
-	while(str[j])
+	while (str[j])
 	{
 		write(fd, &str[j], 1);
 		j++;
@@ -36,7 +36,7 @@ void	execute_echo(char **args, int fd)
 
 	i = 1;
 	add_newline = 1;
-	if (args[1] != NULL && strcmp(args[1], "-n") == 0)
+	if (args[1] != NULL && ft_strcmp(args[1], "-n") == 0)
 	{
 		add_newline = 0;
 		i = 2;

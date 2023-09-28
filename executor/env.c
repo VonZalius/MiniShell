@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:28 by cmansey           #+#    #+#             */
-/*   Updated: 2023/08/07 22:30:33 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/28 13:21:45 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	execute_env(char **environ, int fd)
 	while (*env != NULL)
 	{
 		write_fd(*env, fd);
-			write(fd, "\n", 1);
+		write(fd, "\n", 1);
 		//printf("%s\n", *env);
 		env++;
 	}

@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 15:56:54 by cmansey           #+#    #+#             */
-/*   Updated: 2023/08/07 22:43:56 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/28 12:27:35 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include "../libft/libft.h"
 
 # define MAX_INPUT_LENGTH 1024
 # define MAX_ARGS 64

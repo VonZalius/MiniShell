@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:16 by cmansey           #+#    #+#             */
-/*   Updated: 2023/08/07 22:30:12 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/28 12:39:19 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	change_directory(char *path, char *oldpwd)
 		perror("cd");
 		return ;
 	}
-	strcpy(oldpwd, cwd);
+	ft_strcpy(oldpwd, cwd);
 }
 
 // Prend en paramètres les arguments de la commande et la variable oldpwd
@@ -49,9 +49,9 @@ void	execute_cd(char **args, char *oldpwd)
 		printf("cd: too many arguments\n");
 		return ;
 	}
-	if (strcmp(args[1], "..") == 0)
+	if (ft_strcmp(args[1], "..") == 0)
 		change_directory("..", oldpwd);
-	else if (strcmp(args[1], "-") == 0)
+	else if (ft_strcmp(args[1], "-") == 0)
 	{
 		if (oldpwd[0] == '\0')
 		{

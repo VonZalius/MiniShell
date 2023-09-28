@@ -1,6 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/28 11:55:49 by cmansey           #+#    #+#             */
+/*   Updated: 2023/09/28 16:44:27 by cmansey          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int skip_from_until(lexer *word, char *cmd, char that, char this)
+void	free_array(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
+int	skip_from_until(t_lexer *word, char *cmd, char that, char this)
 {
 	if (cmd[word->i] == that)
 	{
@@ -22,9 +47,9 @@ int skip_from_until(lexer *word, char *cmd, char that, char this)
 	return (1);
 }
 
-void	ft_free_lexer(lexer *word, char *cmd)
+void	ft_free_lexer(t_lexer *word, char *cmd)
 {
-	lexer		*temp;
+	t_lexer		*temp;
 	int			i;
 	int			j;
 
@@ -32,10 +57,7 @@ void	ft_free_lexer(lexer *word, char *cmd)
 	{
 		i = 0;
 		while (i < how_many_arg(cmd, 0, 0))
-		{
-			free(word->arg[i]);
-			i++;
-		}
+			free(word->arg[i++]);
 		free(word->arg);
 		if (word->word != NULL)
 			free(word->word);
@@ -52,11 +74,11 @@ void	ft_free_lexer(lexer *word, char *cmd)
 	close(j);
 }
 
-void  INThandler(int sig)
+void	int_handler(int sig)
 {
 	if (sig == SIGSEGV)
 	{
-		printf("\nYou press Ctrl-D\n");
+		printf("\nYou press -D\n");
 		exit(1);
 	}
 	else if (sig == SIGINT)
