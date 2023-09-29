@@ -6,22 +6,24 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:28 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 13:21:45 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/29 16:48:27 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_shell.h"
 
-void	execute_env(char **environ, int fd)
+int	execute_env(char **environ, int fd)
 {
 	char	**env;
 
 	env = environ;
 	while (*env != NULL)
 	{
-		write_fd(*env, fd);
-		write(fd, "\n", 1);
-		//printf("%s\n", *env);
+		if (write_fd(*env, fd) == -1)
+			return (1);
+		if (write(fd, "\n", 1) == -1)
+			return (1);
 		env++;
 	}
+	return (0);
 }

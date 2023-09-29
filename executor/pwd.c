@@ -6,13 +6,13 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:40 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:23:17 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/29 16:56:21 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_shell.h"
 
-void	execute_pwd(int fd)
+int	execute_pwd(int fd)
 {
 	char	cwd[1024];
 	int		j;
@@ -20,7 +20,7 @@ void	execute_pwd(int fd)
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("pwd");
-		return ;
+		return (1);
 	}
 	j = 0;
 	while (cwd[j])
@@ -29,5 +29,5 @@ void	execute_pwd(int fd)
 		j++;
 	}
 	write(fd, "\n", 1);
-	//printf("%s\n", cwd);
+	return (0);
 }

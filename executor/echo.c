@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:13 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:40:05 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/29 16:44:07 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,21 @@
 // Vérifier si l'argument -n est présent
 // Ajouter un saut de ligne si nécessaire
 
-void	write_fd(char *str, int fd)
+int	write_fd(char *str, int fd)
 {
 	int	j;
 
 	j = 0;
 	while (str[j])
 	{
-		write(fd, &str[j], 1);
+		if (write(fd, &str[j], 1) == -1)
+			return (1);
 		j++;
 	}
+	return (0);
 }
 
-void	execute_echo(char **args, int fd)
+int	execute_echo(char **args, int fd)
 {
 	int	i;
 	int	add_newline;
@@ -43,12 +45,14 @@ void	execute_echo(char **args, int fd)
 	}
 	while (args[i])
 	{
-		write_fd(args[i], fd);
-		//printf("%s", args[i]);
+		if (write_fd(args[i], fd) == -1)
+			return (1);
 		if (args[i + 1])
-			write(fd, " ", 1);
+			if (write(fd, " ", 1) == -1)
+				return (1);
 		i++;
 	}
-	if (add_newline)
-		write(fd, "\n", 1);
+	if (add_newline && write(fd, "\n", 1) == -1)
+		return (1);
+	return (0);
 }

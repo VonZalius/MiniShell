@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:59:54 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 15:10:08 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/29 16:35:39 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,6 @@ int		ft_double(char *cmd);
 char	*ft_strcat(char *dest, const char *src);
 void	free_array(char **arr);
 char	*ft_strinsert(char *str1, char *str2, int pos);
-char    *dollar_search(char *cmd, t_lexer *word);
+char	*dollar_search(char *cmd, t_lexer *word);
 
 #endif

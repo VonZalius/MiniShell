@@ -6,13 +6,11 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:25:01 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:40:59 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/29 16:54:22 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_shell.h"
-
-//STRDUP
 
 // Fonction pour dupliquer un tableau d'environnement
 char	**duplicate_environ(char **environ)

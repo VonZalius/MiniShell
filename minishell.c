@@ -156,10 +156,12 @@ void executor_2(t_lexer *word, char **environ, int saved_stdout)
 	//close(saved_stdout);
 }
 
-void executor(t_lexer *word, int saved_stdout, int t)
+int	executor(t_lexer *word, int saved_stdout, int t)
 {
 	char		oldpwd[1024];
-	extern char 		**environ;
+	extern char	**environ;
+	int			return_value;
+	int			last_command_status = 0;
 
 	if (word->good == 1)
 	{
@@ -177,19 +179,19 @@ void executor(t_lexer *word, int saved_stdout, int t)
 		if (word->word == NULL)
 			t++;
 		else if (ft_strcmp(word->word, "echo") == 0)
-			execute_echo(&word->arg[-1], word->fdwrite);
+			return_value = execute_echo(&word->arg[-1], word->fdwrite);
 		else if (ft_strcmp(word->word, "cd") == 0)
-			execute_cd(&word->arg[-1], oldpwd);
+			return_value = execute_cd(&word->arg[-1], oldpwd);
 		else if (ft_strcmp(word->word, "pwd") == 0)
-			execute_pwd(word->fdwrite);
+			return_value = execute_pwd(word->fdwrite);
 		else if (ft_strcmp(word->word, "export") == 0)
-			execute_export(&word->arg[-1], &environ, word->fdwrite);
+			return_value = execute_export(&word->arg[-1], &environ, word->fdwrite);
 		else if (ft_strcmp(word->word, "unset") == 0)
-			execute_unset(&word->arg[-1], &environ);
+			return_value = execute_unset(&word->arg[-1], &environ);
 		else if (ft_strcmp(word->word, "env") == 0)
-			execute_env(environ, word->fdwrite);
+			return_value = execute_env(environ, word->fdwrite);
 		else if (ft_strcmp(word->word, "exit") == 0)
-			execute_exit(&word->arg[-1]);
+			return_value = execute_exit(&word->arg[-1],last_command_status);
 	//Execution commande de base (j'imagine)
 		else
 			executor_2(word, environ, saved_stdout);
@@ -204,6 +206,7 @@ void executor(t_lexer *word, int saved_stdout, int t)
 		LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
 		//printf("\n   FIN DES RESULTAT !!!\n");
 	}
+	return (return_value);
 }
 
 void pipe_init(t_lexer *word)

@@ -6,24 +6,11 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:55:49 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 16:44:27 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/29 17:51:53 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*void	free_array(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}*/
 
 int	skip_from_until(t_lexer *word, char *cmd, char that, char this)
 {
@@ -54,10 +41,10 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 	int			j;
 
 	//Ici on reboot tout les entrée et sortie standart
-		dup2(s_stdin, STDIN_FILENO);
-		dup2(s_stdout, STDOUT_FILENO);
-		close(s_stdin);
-		close(s_stdout);
+	dup2(s_stdin, STDIN_FILENO);
+	dup2(s_stdout, STDOUT_FILENO);
+	close(s_stdin);
+	close(s_stdout);
 	while (word != NULL)
 	{
 		i = 0;

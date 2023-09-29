@@ -6,12 +6,9 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 17:08:18 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 13:21:43 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/09/29 16:55:12 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-//MODIFIER STRCAT STRNCPY STRCHR STRDUP STRNCMP STRCMP
-//MODIFIER 25 LIGNES
 
 #include "mini_shell.h"
 
@@ -19,7 +16,7 @@
 // Copier la partie avant le signe égal
 // Concaténer la nouvelle valeur
 // Libérer l'ancienne valeur et attribuer la nouvelle valeur
-void	update_existing_variable(char **existing_var, char *new_value)
+int	update_existing_variable(char **existing_var, char *new_value)
 {
 	size_t	var_name_length;
 	size_t	new_value_length;
@@ -38,13 +35,14 @@ void	update_existing_variable(char **existing_var, char *new_value)
 	ft_strcat(new_var, new_value);
 	free(*existing_var);
 	*existing_var = new_var;
+	return (0);
 }
 
 // Calculer la taille actuelle de l'environnement
 // Allouer de la mémoire pour le nouvel environnement
 // Copier les variables de l'ancien environnement vers le nouvel environnement
 // Copier la nouvelle variable dans le nouvel environnement
-void	add_new_variable(char ***environ, char *var)
+int	add_new_variable(char ***environ, char *var)
 {
 	int		env_size;
 	char	**new_environ;
@@ -66,6 +64,7 @@ void	add_new_variable(char ***environ, char *var)
 	new_environ[env_size + 1] = NULL;
 	free(*environ);
 	*environ = new_environ;
+	return (0);
 }
 
 // Remplace une variable dans l'environnement avec une nouvelle valeur
@@ -118,7 +117,7 @@ static char	**find_variable(char *var, char **env, size_t var_name_length)
 	return (NULL);
 }
 
-void	replace_variable(char *var, char ***environ)
+int	replace_variable(char *var, char ***environ)
 {
 	char	*equal_sign;
 	char	*var_value;
@@ -128,7 +127,7 @@ void	replace_variable(char *var, char ***environ)
 	if (!equal_sign || equal_sign == var)
 	{
 		printf("export: invalid syntax: %s\n", var);
-		return ;
+		return (1);
 	}
 	var_value = equal_sign + 1;
 	existing_var = find_variable(var, *environ, equal_sign - var);
@@ -136,14 +135,17 @@ void	replace_variable(char *var, char ***environ)
 		update_existing_variable(existing_var, var_value);
 	else if (!find_variable(var, *environ, ft_strlen(var)))
 		add_new_variable(environ, var);
+	return (0);
 }
 
 //Exécute la commande export en affichant les variables d'environnement
 //ou en les mettant à jour
-void	execute_export(char **args, char ***environ, int fd)
+int	execute_export(char **args, char ***environ, int fd)
 {
 	char	**env;
+	int		retval;
 
+	retval = 0;
 	if (args[1] == NULL)
 	{
 		env = *environ;
@@ -151,10 +153,10 @@ void	execute_export(char **args, char ***environ, int fd)
 		{
 			write_fd(*env, fd);
 			write(fd, "\n", 1);
-			//printf("%s\n", *env);
 			env++;
 		}
 	}
 	else
-		replace_variable(args[1], environ);
+		retval = replace_variable(args[1], environ);
+	return (retval);
 }
