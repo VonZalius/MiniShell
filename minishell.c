@@ -92,26 +92,8 @@ int	fd_for_pipe(t_lexer *word)
 	return (1);
 }
 
-
-int	insert_for_pipe(t_lexer *word)
+int insert_for_pipe_2(char *buffer, t_lexer *word)
 {
-	char *buffer;
-	int bytes_read;
-	int	fd;
-
-	fd = open("pipe_handler", 0);
-	if (fd < 0)
-		return (0);
-	buffer = malloc(sizeof(char) * 1024);
-	bytes_read = read(fd, buffer, 1024);
-	buffer[bytes_read - 1] = '\0';
-	close(fd);
-	if (bytes_read <= 0)
-	{
-		free(buffer);
-		return (0);
-	}
-
 	int	i;
 	int fichier_entree;
 
@@ -138,12 +120,152 @@ int	insert_for_pipe(t_lexer *word)
 	return (1);
 }
 
+int	insert_for_pipe(t_lexer *word)
+{
+	char *buffer;
+	int bytes_read;
+	int	fd;
+
+	fd = open("pipe_handler", 0);
+	if (fd < 0)
+		return (0);
+	buffer = malloc(sizeof(char) * 1024);
+	bytes_read = read(fd, buffer, 1024);
+	buffer[bytes_read - 1] = '\0';
+	close(fd);
+	if (bytes_read <= 0)
+	{
+		free(buffer);
+		return (0);
+	}
+	if (insert_for_pipe_2(buffer, word) == 0)
+		return (0);
+	return (1);
+}
+
+void executor_2(t_lexer *word, char **environ, int saved_stdout)
+{
+	if (word->fdwrite > 1)
+		if (dup2(word->fdwrite, STDOUT_FILENO) < 0)
+			word->good = 0;
+	if (word->good != 0)
+		ft_other(word, environ);
+	//Ici on reboot tout les entrée et sortie standart
+	if (word->fdwrite > 1)
+		dup2(saved_stdout, STDOUT_FILENO);
+	//close(saved_stdout);
+}
+
+void executor(t_lexer *word, int saved_stdout, int t)
+{
+	char		oldpwd[1024];
+	extern char 		**environ;
+
+	if (word->good == 1)
+	{
+		//printf("\n   RESULTAT !!!\n\n");
+		/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
+			   |XX|
+			   |XX|
+			   |XX|
+			 \XXXXXX/
+		 	  \XXXX/
+			   \XX/
+		        \/		*/
+
+
+		if (word->word == NULL)
+			t++;
+		else if (ft_strcmp(word->word, "echo") == 0)
+			execute_echo(&word->arg[-1], word->fdwrite);
+		else if (ft_strcmp(word->word, "cd") == 0)
+			execute_cd(&word->arg[-1], oldpwd);
+		else if (ft_strcmp(word->word, "pwd") == 0)
+			execute_pwd(word->fdwrite);
+		else if (ft_strcmp(word->word, "export") == 0)
+			execute_export(&word->arg[-1], &environ, word->fdwrite);
+		else if (ft_strcmp(word->word, "unset") == 0)
+			execute_unset(&word->arg[-1], &environ);
+		else if (ft_strcmp(word->word, "env") == 0)
+			execute_env(environ, word->fdwrite);
+		else if (ft_strcmp(word->word, "exit") == 0)
+			execute_exit(&word->arg[-1]);
+	//Execution commande de base (j'imagine)
+		else
+			executor_2(word, environ, saved_stdout);
+
+		/*      /\
+			   /XX\
+		 	  /XXXX\
+			 /XXXXXX\
+			   |XX|
+			   |XX|
+			   |XX|
+		LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
+		//printf("\n   FIN DES RESULTAT !!!\n");
+	}
+}
+
+void pipe_init(t_lexer *word)
+{
+	word->good = 1;
+	//Ici on initialise l'entrée qui suit le pipe
+	if (word->good == 1)
+		if (word->fdpipe != 0 && word->good == 1)
+			if(insert_for_pipe(word) == 0)
+				word->good = 0;
+}
+
+void pipe_out(t_lexer *word, int t)
+{
+//Ici on change la sortie en cas de pipe
+	if (word->good == 1)
+	{
+		if (t > 0)
+			if (fd_for_pipe(word) == 0)
+				word->good = 0;
+		//printf("   Exit pipe initialized !\n");
+	}
+}
+
+void reboot(t_lexer *word, int saved_stdout)
+{
+//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à mettre dans le free_lexer ???
+		if (word->fdwrite != 0)
+			close(word->fdwrite);
+		if (word->fdread != 0)
+			close(word->fdread);
+	//Ici on reboot tout les entrée et sortie standart
+		dup2(saved_stdout, STDOUT_FILENO);
+}
+
+t_lexer	*struct_pipe(t_lexer *word, t_lexer *save)
+{
+	close(word->fdwrite);
+	save = word;
+	word = word->next;
+	word->prev = save;
+	word->fdpipe = 1;
+	return (word);
+}
+
+int	main_while_2(char *cmd, t_lexer *word, int start, int t)
+{
+	pipe_init(word);
+				//printf("   Enter pipe initialized !\n");
+	//Ici on séquence l'input !!
+	cmd = env_write_read(cmd, word, start);
+	if (word->good == 1)
+		t = last_check(cmd, word, start, t);
+	else
+		t = 0;
+	pipe_out(word, t);
+	return (t);
+}
 
 void main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 {
 	int		t;
-	char		oldpwd[1024];
-	extern char 		**environ;
 	//int		i;/* <--- utile pour les print, donc à supprimer */
 	//int		j;/* <--- utile pour les print, donc à supprimer */
 	int saved_stdin = dup(STDIN_FILENO);
@@ -160,115 +282,20 @@ void main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 		t--;
 		//i++;/* <--- utile pour les print, donc à supprimer */
 	}
-
 	t = 1;
-
 	while (t > 0)
 	{
-		word->good = 1;
-	//Ici on initialise l'entrée qui suit le pipe
-		if (word->good == 1)
-			if (word->fdpipe != 0 && word->good == 1)
-				if(insert_for_pipe(word) == 0)
-					word->good = 0;
-				//printf("   Enter pipe initialized !\n");
-	//Ici on séquence l'input !!
-		cmd = env_write_read(cmd, word, start);
-		if (word->good == 1)
-			t = last_check(cmd, word, start, t);
-		else
-			t = 0;
-	//Ici on change la sortie en cas de pipe
-		if (word->good == 1)
-		{
-			if (t > 0)
-				if (fd_for_pipe(word) == 0)
-					word->good = 0;
-			//printf("   Exit pipe initialized !\n");
-		}
+		t = main_while_2(cmd, word, start, t);
 	//Ici on lance l'execution !!!
-		if (word->good == 1)
-		{
-			//printf("\n   RESULTAT !!!\n\n");
-			/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
-				   |XX|
-				   |XX|
-				   |XX|
-				 \XXXXXX/
-			 	  \XXXX/
-				   \XX/
-			        \/		*/
-
-
-			if (word->word == NULL)
-			{
-				t++;
-				t--;
-			}
-			else if (ft_strcmp(word->word, "echo") == 0)
-				execute_echo(&word->arg[-1], word->fdwrite);
-			else if (ft_strcmp(word->word, "cd") == 0)
-				execute_cd(&word->arg[-1], oldpwd);
-			else if (ft_strcmp(word->word, "pwd") == 0)
-				execute_pwd(word->fdwrite);
-			else if (ft_strcmp(word->word, "export") == 0)
-				execute_export(&word->arg[-1], &environ, word->fdwrite);
-			else if (ft_strcmp(word->word, "unset") == 0)
-				execute_unset(&word->arg[-1], &environ);
-			else if (ft_strcmp(word->word, "env") == 0)
-				execute_env(environ, word->fdwrite);
-			else if (ft_strcmp(word->word, "exit") == 0)
-				execute_exit(&word->arg[-1]);
-		//Execution commande de base (j'imagine)
-			else
-			{
-				if (word->fdwrite > 1)
-					if (dup2(word->fdwrite, STDOUT_FILENO) < 0)
-						word->good = 0;
-				if (word->good != 0)
-					ft_other(word, environ);
-				//Ici on reboot tout les entrée et sortie standart
-				if (word->fdwrite > 1)
-					dup2(saved_stdout, STDOUT_FILENO);
-					//close(saved_stdout);
-			}
-
-			/*      /\
-				   /XX\
-			 	  /XXXX\
-				 /XXXXXX\
-				   |XX|
-				   |XX|
-				   |XX|
-			LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
-			//printf("\n   FIN DES RESULTAT !!!\n");
-		}
+		executor(word, saved_stdout, t);
 		if (t > 0 && word->good == 1)
 		{
 			//printf("\nWE FIND A PIPE ! ABOOOOORT MISSION ! ----------------------\n\n"); // <--- à supprimer
-			close(word->fdwrite);
 			start = t + 1;
-			save = word;
-			word = word->next;
-			word->prev = save;
-			word->fdpipe = 1;
+			word = struct_pipe(word, save);
 		}
-	//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à mettre dans le free_lexer ???
-		if (word->fdwrite != 0)
-			close(word->fdwrite);
-		if (word->fdread != 0)
-			close(word->fdread);
-	//Ici on reboot tout les entrée et sortie standart
-		dup2(saved_stdout, STDOUT_FILENO);
+		reboot(word, saved_stdout);
 	}
-	//Ici on reboot tout les entrée et sortie standart
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
-
-		close(saved_stdin);
-		close(saved_stdout);
-		//close(STDIN_FILENO);
-		//close(STDOUT_FILENO);
 
 	//Ici on imprime une serie d'élément afin de checker que tout fonctionne, à supprimer. ATTENTION, CECI MODIFIE LES VALEURS !!!
 	/*if (word->good == 1)
@@ -301,7 +328,7 @@ void main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	}*/
 
 	//Ici on Free tout le lexer.
-	ft_free_lexer(word, cmd);
+	ft_free_lexer(word, cmd, saved_stdin, saved_stdout);
 	//printf("\n    -- END OF LOOP --\n\n\n");
 }
 

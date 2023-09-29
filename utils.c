@@ -47,12 +47,17 @@ int	skip_from_until(t_lexer *word, char *cmd, char that, char this)
 	return (1);
 }
 
-void	ft_free_lexer(t_lexer *word, char *cmd)
+void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 {
 	t_lexer		*temp;
 	int			i;
 	int			j;
 
+	//Ici on reboot tout les entrée et sortie standart
+		dup2(s_stdin, STDIN_FILENO);
+		dup2(s_stdout, STDOUT_FILENO);
+		close(s_stdin);
+		close(s_stdout);
 	while (word != NULL)
 	{
 		i = 0;

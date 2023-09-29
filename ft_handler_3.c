@@ -59,6 +59,27 @@ char	*ft_strcat(char *dest, const char *src)
 	return (dest);
 }
 
+int ft_double_2(char *db2)
+ {
+	int	j;
+	int	fd;
+
+	j = 0;
+	fd = open("double_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	if (fd == -1)
+		return (0);
+	while (db2[j])
+	{
+		write(fd, &db2[j], 1);
+		j++;
+	}
+	close(fd);
+	fd = open("double_handler", 0);
+	if (dup2(fd, STDIN_FILENO) < 0)
+		return (0);
+	return (1);
+ }
+
 int	ft_double(char *cmd)
 {
 	char	*db;
@@ -80,22 +101,7 @@ int	ft_double(char *cmd)
 		db = NULL;
 		db = readline("> ");
 	}
-
-	int	j;
-	int	fd;
-
-	j = 0;
-	fd = open("double_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
-	if (fd == -1)
-		return (0);
-	while (db2[j])
-	{
-		write(fd, &db2[j], 1);
-		j++;
-	}
-	close(fd);
-	fd = open("double_handler", 0);
-	if (dup2(fd, STDIN_FILENO) < 0)
+	if (ft_double_2(db2) == 0)
 		return (0);
 	return (1);
 }

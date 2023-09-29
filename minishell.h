@@ -44,6 +44,7 @@ typedef struct s_lexer
 	int				fdread;
 	int				fdwrite;
 	int				fdpipe;
+	int				error;
 	struct s_lexer	*next;
 	struct s_lexer	*prev;
 }	t_lexer;
@@ -56,7 +57,7 @@ t_lexer	*find_word(t_lexer *last_word, int i);
 int		cmd_in_struct(t_lexer *word, char *cmd, int start);
 int		how_many_arg(char *cmd, int i_bis, int j);
 int		skip_from_until(t_lexer *word, char *cmd, char that, char this);
-void	ft_free_lexer(t_lexer *word, char *cmd);
+void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout);
 void	int_handler(int sig);
 void	rl_replace_line(const char *text, int clear_undo);
 void	ft_other(t_lexer *word, char **environ);
