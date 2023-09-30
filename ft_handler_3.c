@@ -73,6 +73,7 @@ int ft_double_2(char *db2)
 		write(fd, &db2[j], 1);
 		j++;
 	}
+	write(fd, "\n", 1);
 	close(fd);
 	fd = open("double_handler", 0);
 	if (dup2(fd, STDIN_FILENO) < 0)

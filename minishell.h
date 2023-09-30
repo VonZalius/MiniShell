@@ -34,6 +34,7 @@ typedef struct s_mini
 
 typedef struct s_lexer
 {
+	int				dol;
 	int				quot_check;
 	int				cmd_check;
 	int				index;
@@ -67,5 +68,12 @@ char	*ft_strcat(char *dest, const char *src);
 void	free_array(char **arr);
 char	*ft_strinsert(char *str1, char *str2, int pos);
 char	*dollar_search(char *cmd, t_lexer *word);
+void	pipe_out(t_lexer *word, int t);
+void	pipe_init(t_lexer *word);
+t_lexer	*struct_pipe(t_lexer *word, t_lexer *save);
+void	executor(t_lexer *word, int saved_stdout, int t);
+int		last_check(char *cmd, t_lexer *word, int start, int is_pipe);
+char	*env_write_read(char *cmd, t_lexer *word, int start);
+int 	nbr_of_pipe(char *cmd);
 
 #endif

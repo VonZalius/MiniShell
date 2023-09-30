@@ -96,7 +96,34 @@ int	cmd_terminator(t_lexer *word, int index_arg, int k)
 	return (index_arg);
 }
 
-int	cmd_big_while(char *cmd, t_lexer *word, int index_arg, int i_bis)
+int c_b_w_2(char *cmd, t_lexer *word, int k, int index_arg)
+{
+	int	i_bis; 
+
+	i_bis = cmd_while_for_len(cmd, word->i, word);
+	if (cmd_malloc(word, i_bis, index_arg) == 0)
+		return (-10);
+	k = 0;
+	i_bis = i_bis - word->i;
+	if (word->quot_check == 1)
+	{
+		word->i++;
+		i_bis -= 2;
+	}
+	while (i_bis-- > 0)
+	{
+		if (word->cmd_check == 0)
+			word->word[k++] = cmd[word->i++];
+		else
+			word->arg[index_arg][k++] = cmd[word->i++];
+	}
+	index_arg = cmd_terminator(word, index_arg, k);
+	if (word->quot_check == 1)
+		word->i++;
+	return (k);
+}
+
+int	cmd_big_while(char *cmd, t_lexer *word, int index_arg)
 {
 	int	k;
 
@@ -109,26 +136,9 @@ int	cmd_big_while(char *cmd, t_lexer *word, int index_arg, int i_bis)
 		if (k == -1)
 		{
 			//printf("- - - - - >  Word or Argumet detected [%c]\n", cmd[word->i]);
-			i_bis = cmd_while_for_len(cmd, word->i, word);
-			if (cmd_malloc(word, i_bis, index_arg) == 0)
+			k = c_b_w_2(cmd, word, k, index_arg);
+			if (k == -10)
 				return (0);
-			k = 0;
-			i_bis = i_bis - word->i;
-			if (word->quot_check == 1)
-			{
-				word->i++;
-				i_bis -= 2;
-			}
-			while (i_bis-- > 0)
-			{
-				if (word->cmd_check == 0)
-					word->word[k++] = cmd[word->i++];
-				else
-					word->arg[index_arg][k++] = cmd[word->i++];
-			}
-			index_arg = cmd_terminator(word, index_arg, k);
-			if (word->quot_check == 1)
-				word->i++;
 		}
 	}
 	return (-1);
@@ -136,13 +146,11 @@ int	cmd_big_while(char *cmd, t_lexer *word, int index_arg, int i_bis)
 
 int	cmd_in_struct(t_lexer *word, char *cmd, int start)
 {
-	int			i_bis;
 	int			j;
 	int			index_arg;
 
 	word->i = start;
 	index_arg = 0;
-	i_bis = 0;
 	j = 0;
 	j = how_many_arg(cmd, start, j);
 	word->arg = (char **)malloc(sizeof(char *) * (j + 1));
@@ -150,5 +158,5 @@ int	cmd_in_struct(t_lexer *word, char *cmd, int start)
 		return (0);
 	word->arg[j] = NULL;
 	word->cmd_check = 0;
-	return (cmd_big_while(cmd, word, index_arg, i_bis));
+	return (cmd_big_while(cmd, word, index_arg));
 }

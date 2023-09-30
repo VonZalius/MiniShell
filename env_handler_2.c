@@ -14,10 +14,7 @@
 
 char    *dollar_search(char *cmd, t_lexer *word)
 {
-    int i;
-
-    i = 0;
-    cmd = ft_strinsert(cmd, ft_itoa(i), word->i);
+    cmd = ft_strinsert(cmd, ft_itoa(word->dol), word->i);
     return (cmd);
 }
 
@@ -104,7 +101,6 @@ char	*ft_strinsert(char *str1, char *str2, int pos)
 	mini.j = 0;
 	mini.k = 0;
 	ft_strinsert_bis(&mini, str1, str2, pos);
-	free (str1);
 	mini.final[mini.i] = '\0';
 	return (mini.final);
 }

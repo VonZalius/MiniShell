@@ -34,11 +34,22 @@ int	skip_from_until(t_lexer *word, char *cmd, char that, char this)
 	return (1);
 }
 
+void	ft_close_handler()
+{
+	int	j;
+
+	j = open("pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
+	j = open("double_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
+	j = open("pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
+}
+
 void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 {
 	t_lexer		*temp;
 	int			i;
-	int			j;
 
 	//Ici on reboot tout les entrée et sortie standart
 	dup2(s_stdin, STDIN_FILENO);
@@ -58,12 +69,7 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 		free(temp);
 	}
 	free (cmd);
-	j = open("pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
-	close(j);
-	j = open("double_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
-	close(j);
-	j = open("pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
-	close(j);
+	ft_close_handler();
 }
 
 void	int_handler(int sig)
@@ -83,4 +89,14 @@ void	int_handler(int sig)
 	}
 	else
 		printf("\n Sorry... What ??\n");
+}
+
+t_lexer	*struct_pipe(t_lexer *word, t_lexer *save)
+{
+	close(word->fdwrite);
+	save = word;
+	word = word->next;
+	word->prev = save;
+	word->fdpipe = 1;
+	return (word);
 }
