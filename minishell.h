@@ -75,5 +75,8 @@ void	executor(t_lexer *word, int saved_stdout, int t);
 int		last_check(char *cmd, t_lexer *word, int start, int is_pipe);
 char	*env_write_read(char *cmd, t_lexer *word, int start);
 int 	nbr_of_pipe(char *cmd);
+char	**make_args(t_lexer *word);
+int		cmd_while_for_len(char *cmd, int i_bis, t_lexer *word);
+int		cmd_jump_over(char *cmd, t_lexer *word);
 
 #endif

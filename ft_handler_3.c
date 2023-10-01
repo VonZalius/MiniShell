@@ -41,22 +41,29 @@ int	ft_fin(char *cmd, char *rl)
 	return (1);
 }
 
-char	*ft_strcat(char *dest, const char *src)
+char	*ft_strcat_b(char *dest, const char *src)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	*b;
 
 	i = 0;
+	b = malloc (sizeof(char) * 999);
 	while (dest[i] != '\0')
+	{
+		b[i] = dest[i];
 		i++;
+	}
 	j = 0;
 	while (src[j] != '\0')
 	{
-		dest[i + j] = src[j];
+		b[i] = src[j];
+		i++;
 		j++;
 	}
-	dest[i + j] = '\0';
-	return (dest);
+	b[i] = '\0';
+	free(dest);
+	return (b);
 }
 
 int ft_double_2(char *db2)
@@ -73,6 +80,7 @@ int ft_double_2(char *db2)
 		write(fd, &db2[j], 1);
 		j++;
 	}
+	free(db2);
 	write(fd, "\n", 1);
 	close(fd);
 	fd = open("double_handler", 0);
@@ -96,8 +104,8 @@ int	ft_double(char *cmd)
 			db2 = db;
 		else
 		{
-			db2 = ft_strcat(db2, "\n");
-			db2 = ft_strcat(db2, db);
+			db2 = ft_strcat_b(db2, "\n\0");
+			db2 = ft_strcat_b(db2, db);
 		}
 		db = NULL;
 		db = readline("> ");

@@ -138,6 +138,7 @@ void	ft_other(t_lexer *word, char **environ)
 {
 	pid_t		pid;
 	char		*full_path;
+	char		**args;
 	//char		**environ_copy;
 
 	pid = fork();
@@ -146,11 +147,12 @@ void	ft_other(t_lexer *word, char **environ)
 		perror("fork");
 	else if (pid == 0)
 	{
-		word->arg[-1] = word->word;
-		full_path = find_command_path(word->arg[-1], environ);
+		//word->arg[-1] = word->word;
+		args = make_args(word);
+		full_path = find_command_path(args[0], environ);
 		if (full_path)
 		{
-			execve(full_path, &word->arg[-1], environ);
+			execve(full_path, &args[0], environ);
 			free(full_path);
 		}
 		else
@@ -158,6 +160,7 @@ void	ft_other(t_lexer *word, char **environ)
 			perror("execve");
 			exit(EXIT_FAILURE);
 		}
+		free (args);
 	}
 	else
 		wait(NULL);

@@ -123,7 +123,6 @@ void	executor(t_lexer *word, int saved_stdout, int t)
 			   \XX/
 		        \/		*/
 
-
 		if (word->word == NULL)
 			t++;
 		else if (ft_strcmp(word->word, "echo") == 0)
