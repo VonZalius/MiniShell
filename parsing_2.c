@@ -167,5 +167,7 @@ int	how_many_arg(char *cmd, int i_bis, int j)
 			i_bis++;
 
 	}*/
+	if (j == 0)
+		return (j);
 	return (j - 1);
 }

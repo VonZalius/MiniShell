@@ -88,6 +88,7 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 			while (t < (how_many_arg(cmd, i, 0)))
 			{
 				printf("Arg : %s\n", word->arg[t]);
+	
 				t++;
 			}
 			printf("\n");

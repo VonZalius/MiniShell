@@ -158,7 +158,9 @@ void	ft_other(t_lexer *word, char **environ)
 		else
 		{
 			perror("execve");
-			exit(EXIT_FAILURE);
+			free(args);
+			//exit(EXIT_FAILURE);
+			return;
 		}
 		free (args);
 	}
