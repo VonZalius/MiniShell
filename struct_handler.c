@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:20:48 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:23:24 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/01 19:06:25 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_lexer	*struct_init(t_lexer *prevew, int i)
 	lexer_word = malloc(sizeof(*lexer_word));
 	if (lexer_word == NULL)
 	{
-		free(lexer_word);
+		//free(lexer_word);
 		return (NULL);
 	}
 	lexer_word->i = 0;

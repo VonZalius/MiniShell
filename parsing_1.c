@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:16:54 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:23:25 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/01 19:02:28 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ int	cmd_terminator(t_lexer *word, int index_arg, int k)
 	return (index_arg);
 }
 
-int c_b_w_2(char *cmd, t_lexer *word, int k, int index_arg)
+int	c_b_w_2(char *cmd, t_lexer *word, int k, int index_arg)
 {
-	int	i_bis; 
+	int	i_bis;
 
 	i_bis = cmd_while_for_len(cmd, word->i, word);
 	if (cmd_malloc(word, i_bis, index_arg) == 0)

@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:55:49 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/29 17:51:53 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 15:49:15 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	cleanup(t_lexer *word)
+{
+	int	i;
+
+	i = 0;
+	if (word->arg)
+	{
+		while (word->arg[i])
+		{
+			free(word->arg[i]);
+			i++;
+		}
+		free(word->arg);
+	}
+	if (word->word)
+		free(word->word);
+	free(word);
+}
 
 char	**make_args(t_lexer *word)
 {

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_handler_3.c                                     :+:      :+:    :+:   */
+/*   pipe_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 14:52:58 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/01 18:40:38 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	fd_for_pipe(t_lexer *word)
 {
-	int fichier_sortie;
+	int	fichier_sortie;
 
 	fichier_sortie = open("pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (fichier_sortie == -1)
@@ -23,10 +23,10 @@ int	fd_for_pipe(t_lexer *word)
 	return (1);
 }
 
-int insert_for_pipe_2(char *buffer, t_lexer *word)
+int	insert_for_pipe_2(char *buffer, t_lexer *word)
 {
 	int	i;
-	int fichier_entree;
+	int	fichier_entree;
 
 	fichier_entree = open("pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (fichier_entree == -1)
@@ -36,7 +36,7 @@ int insert_for_pipe_2(char *buffer, t_lexer *word)
 	}
 	word->fdread = fichier_entree;
 	i = 0;
-	while(buffer[i] != '\0')
+	while (buffer[i] != '\0')
 	{
 		write(word->fdread, &buffer[i], 1);
 		i++;
@@ -54,9 +54,9 @@ int insert_for_pipe_2(char *buffer, t_lexer *word)
 
 int	insert_for_pipe(t_lexer *word)
 {
-	char *buffer;
-	int bytes_read;
-	int	fd;
+	char	*buffer;
+	int		bytes_read;
+	int		fd;
 
 	fd = open("pipe_handler", 0);
 	if (fd < 0)
@@ -75,17 +75,17 @@ int	insert_for_pipe(t_lexer *word)
 	return (1);
 }
 
-void    pipe_init(t_lexer *word)
+void	pipe_init(t_lexer *word)
 {
 	word->good = 1;
 	//Ici on initialise l'entrée qui suit le pipe
 	if (word->good == 1)
 		if (word->fdpipe != 0 && word->good == 1)
-			if(insert_for_pipe(word) == 0)
+			if (insert_for_pipe(word) == 0)
 				word->good = 0;
 }
 
-void    pipe_out(t_lexer *word, int t)
+void	pipe_out(t_lexer *word, int t)
 {
 //Ici on change la sortie en cas de pipe
 	if (word->good == 1)

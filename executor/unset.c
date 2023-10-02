@@ -6,11 +6,11 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:43 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/29 17:04:17 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 15:42:43 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "../minishell.h"
 
 // Recherche de la variable dans l'environnement
 // Suppression de la variable de l'environnement

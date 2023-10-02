@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_handler_3.c                                     :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 14:52:58 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 14:27:14 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void reboot(t_lexer *word, int saved_stdout)
+void	reboot(t_lexer *word, int saved_stdout)
 {
 //Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à mettre dans le free_lexer ???
-		if (word->fdwrite != 0)
-			close(word->fdwrite);
-		if (word->fdread != 0)
-			close(word->fdread);
+	if (word->fdwrite != 0)
+		close(word->fdwrite);
+	if (word->fdread != 0)
+		close(word->fdread);
 	//Ici on reboot tout les entrée et sortie standart
-		dup2(saved_stdout, STDOUT_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
 }
 
 int	main_while_2(char *cmd, t_lexer *word, int start, int t)
@@ -37,13 +37,13 @@ int	main_while_2(char *cmd, t_lexer *word, int start, int t)
 	return (t);
 }
 
-void main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
+void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 {
-	int		t;
 	//int		i;/* <--- utile pour les print, donc à supprimer */
 	//int		j;/* <--- utile pour les print, donc à supprimer */
-	int saved_stdin = dup(STDIN_FILENO);
-	int saved_stdout = dup(STDOUT_FILENO);
+	int			t;
+	int			saved_stdin = dup(STDIN_FILENO);
+	int			saved_stdout = dup(STDOUT_FILENO);
 	static int	m;
 
 	t = nbr_of_pipe(cmd);
@@ -54,7 +54,7 @@ void main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	while (t != 0)
 		word = struct_init(word, t--);
 	t = 1;
-		word->dol = m;
+	word->dol = m;
 	while (t > 0)
 	{
 		t = main_while_2(cmd, word, start, t);
@@ -105,14 +105,14 @@ void main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	//printf("\n    -- END OF LOOP --\n\n\n");
 }
 
-int main(void)
+int	main(void)
 {
 	char		*cmd;
 	int			start;
 	t_lexer		*word;
 	t_lexer		*save;
-	int saved_stdin = dup(STDIN_FILENO);
-	int saved_stdout = dup(STDOUT_FILENO);
+	int			saved_stdin = dup(STDIN_FILENO);
+	int			saved_stdout = dup(STDOUT_FILENO);
 
 	signal(SIGSEGV, int_handler);
 	signal(SIGINT, int_handler);
@@ -122,6 +122,8 @@ int main(void)
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 		cmd = readline("Prompt > ");
+		if (cmd == NULL)
+			exit(0);
 		add_history(cmd);
 		word = NULL;
 		save = NULL;

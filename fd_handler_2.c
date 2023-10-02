@@ -1,6 +1,6 @@
-#include "minishell.h"
+/*#include "minishell.h"
 
-/*int ft_len_of_t(char *str1)
+int ft_len_of_t(char *str1)
 {
 	int	i;
 	int	b;

@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:53:38 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:57:23 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 14:26:10 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*s_f_e_bis(char *cmd, t_lexer *word)
 	if (cmd[word->i] == '$')
 	{
 		if (cmd[word->i + 1] == ' ' || cmd[word->i + 1] == '\0')
-			return(cmd);
+			return (cmd);
 		word->i++;
 		j = word->i;
 		str2 = malloc(sizeof(char) * (ft_strlen_space(cmd, word->i) + 1));
@@ -45,11 +45,12 @@ char	*s_f_e_bis(char *cmd, t_lexer *word)
 		cmd = ft_strinsert(cmd, getenv(str2), word->i - 1);
 		if (cmd == NULL)
 			return (NULL);
+		//free(str2);
 	}
 	return (cmd);
 }
 
-int		s_f_e_skip(t_lexer *word, char *cmd)
+int	s_f_e_skip(t_lexer *word, char *cmd)
 {
 	if (cmd[word->i] == '\'')
 	{

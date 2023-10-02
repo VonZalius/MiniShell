@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_handler.c                                      :+:      :+:    :+:   */
+/*   env_handler_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:53:38 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:57:23 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 14:26:04 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char    *dollar_search(char *cmd, t_lexer *word)
+char	*dollar_search(char *cmd, t_lexer *word)
 {
-    cmd = ft_strinsert(cmd, ft_itoa(word->dol), word->i);
-    return (cmd);
+	cmd = ft_strinsert(cmd, ft_itoa(word->dol), word->i);
+	return (cmd);
 }
 
 int	ft_len_of_dol(char *str1)
@@ -46,7 +46,7 @@ int	ft_len_of_dol(char *str1)
 	return (b);
 }
 
-int ft_strinsert_last(t_mini *mini, char *str1, char *str2)
+int	ft_strinsert_last(t_mini *mini, char *str1, char *str2)
 {
 	mini->j++;
 	if (str2 == NULL)

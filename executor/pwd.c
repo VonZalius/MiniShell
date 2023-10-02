@@ -6,11 +6,11 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:40 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/29 16:56:21 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 15:42:39 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "../minishell.h"
 
 int	execute_pwd(int fd)
 {

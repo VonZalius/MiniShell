@@ -6,7 +6,7 @@
 #    By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/24 14:27:20 by cmansey           #+#    #+#              #
-#    Updated: 2023/09/28 14:32:05 by cmansey          ###   ########.fr        #
+#    Updated: 2023/10/01 18:24:07 by cmansey          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,9 @@ $(NAME): $(OBJ)
 debug: $(OBJ)
 	@make -C $(LIBFT)
 	$(CC) $(CFLAGS) $(INCLUDES) -fsanitize=address -fno-omit-frame-pointer $^ $(LIBRARIES) -o $(NAME)
+
+valgrind: $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@

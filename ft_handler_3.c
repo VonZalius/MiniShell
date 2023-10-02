@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 14:52:58 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/01 18:39:38 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ char	*ft_strcat_b(char *dest, const char *src)
 	return (b);
 }
 
-int ft_double_2(char *db2)
- {
+int	ft_double_2(char *db2)
+{
 	int	j;
 	int	fd;
 
@@ -87,7 +87,7 @@ int ft_double_2(char *db2)
 	if (dup2(fd, STDIN_FILENO) < 0)
 		return (0);
 	return (1);
- }
+}
 
 int	ft_double(char *cmd)
 {

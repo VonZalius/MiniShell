@@ -6,11 +6,11 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:25:01 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/29 16:54:22 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 15:42:25 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "../minishell.h"
 
 // Fonction pour dupliquer un tableau d'environnement
 char	**duplicate_environ(char **environ)

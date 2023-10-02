@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:55:49 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/29 17:51:53 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 15:49:29 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	skip_from_until(t_lexer *word, char *cmd, char that, char this)
 	return (1);
 }
 
-void	ft_close_handler()
+void	ft_close_handler(void)
 {
 	int	j;
 

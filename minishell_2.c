@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_handler_3.c                                     :+:      :+:    :+:   */
+/*   minishell_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 14:52:58 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 15:37:01 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int nbr_of_pipe(char *cmd)
+int	nbr_of_pipe(char *cmd)
 {
 	int t;
 	int i;
 
 	t = 1;
 	i = 0;
+	/*if (cmd == NULL)
+		return (0);*/
 	while (cmd[i] != '\0')
 	{
 		if (cmd[i] == '\"')
@@ -138,7 +140,7 @@ void	executor(t_lexer *word, int saved_stdout, int t)
 		else if (ft_strcmp(word->word, "env") == 0)
 			word->dol = execute_env(environ, word->fdwrite);
 		else if (ft_strcmp(word->word, "exit") == 0)
-			word->dol = execute_exit(&word->arg[-1],last_command_status);
+			word->dol = execute_exit(word, &word->arg[-1],last_command_status);
 	//Execution commande de base (j'imagine)
 		else
 			executor_2(word, environ, saved_stdout);

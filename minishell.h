@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:59:54 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/29 16:35:39 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/02 15:49:37 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@
 # include <signal.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
-# include "executor/mini_shell.h"
 
 typedef struct s_mini
 {
@@ -74,9 +74,23 @@ t_lexer	*struct_pipe(t_lexer *word, t_lexer *save);
 void	executor(t_lexer *word, int saved_stdout, int t);
 int		last_check(char *cmd, t_lexer *word, int start, int is_pipe);
 char	*env_write_read(char *cmd, t_lexer *word, int start);
-int 	nbr_of_pipe(char *cmd);
+int		nbr_of_pipe(char *cmd);
 char	**make_args(t_lexer *word);
 int		cmd_while_for_len(char *cmd, int i_bis, t_lexer *word);
 int		cmd_jump_over(char *cmd, t_lexer *word);
+int		execute_echo(char **args, int fd);
+int		execute_cd(char **args, char *oldpwd);
+int		execute_pwd(int fd);
+int		execute_export(char **args, char ***environ, int fd);
+int		execute_unset(char **args, char ***environ);
+int		execute_env(char **environ, int fd);
+int		execute_exit(t_lexer *word, char **args, int last_command_status);
+void	malloc_error(char **error);
+void	malloc_error_1(char *error);
+void	free_environ(char **environ);
+char	**duplicate_environ(char **environ);
+int		write_fd(char *str, int fd);
+void	cleanup(t_lexer *word);
+
 
 #endif
