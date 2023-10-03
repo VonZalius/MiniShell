@@ -59,7 +59,7 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	{
 		t = main_while_2(cmd, word, start, t);
 	//Ici on lance l'execution !!!
-		executor(word, saved_stdout, t);
+		executor(word, saved_stdout, t, cmd);
 		if (t > 0 && word->good == 1)
 		{
 			//printf("\nWE FIND A PIPE ! ABOOOOORT MISSION ! ----------------------\n\n"); // <--- à supprimer

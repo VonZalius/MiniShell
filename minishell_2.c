@@ -94,20 +94,20 @@ int	last_check(char *cmd, t_lexer *word, int start, int is_pipe)
 	return (is_pipe);
 }
 
-void executor_2(t_lexer *word, char **environ, int saved_stdout)
+void executor_2(t_lexer *word, char **environ, int saved_stdout, char *cmd)
 {
 	if (word->fdwrite > 1)
 		if (dup2(word->fdwrite, STDOUT_FILENO) < 0)
 			word->good = 0;
 	if (word->good != 0)
-		ft_other(word, environ);
+		ft_other(word, environ, cmd);
 	//Ici on reboot tout les entrée et sortie standart
 	if (word->fdwrite > 1)
 		dup2(saved_stdout, STDOUT_FILENO);
 	//close(saved_stdout);
 }
 
-void	executor(t_lexer *word, int saved_stdout, int t)
+void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)
 {
 	char		oldpwd[1024];
 	extern char	**environ;
@@ -143,7 +143,7 @@ void	executor(t_lexer *word, int saved_stdout, int t)
 			word->dol = execute_exit(word, &word->arg[-1],last_command_status);
 	//Execution commande de base (j'imagine)
 		else
-			executor_2(word, environ, saved_stdout);
+			executor_2(word, environ, saved_stdout, cmd);
 
 		/*      /\
 			   /XX\

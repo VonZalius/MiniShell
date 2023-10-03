@@ -52,14 +52,17 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 	int			i;
 
 	//Ici on reboot tout les entrée et sortie standart
-	dup2(s_stdin, STDIN_FILENO);
-	dup2(s_stdout, STDOUT_FILENO);
-	close(s_stdin);
-	close(s_stdout);
+	if(s_stdin != -42)
+	{
+		dup2(s_stdin, STDIN_FILENO);
+		dup2(s_stdout, STDOUT_FILENO);
+		close(s_stdin);
+		close(s_stdout);
+	}
 	while (word != NULL)
 	{
 		i = 0;
-		while (i < how_many_arg(cmd, 0, 0))
+		while (word->arg[i])
 			free(word->arg[i++]);
 		free(word->arg);
 		if (word->word != NULL)
@@ -70,6 +73,16 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 	}
 	free (cmd);
 	ft_close_handler();
+}
+
+t_lexer	*struct_pipe(t_lexer *word, t_lexer *save)
+{
+	close(word->fdwrite);
+	save = word;
+	word = word->next;
+	word->prev = save;
+	word->fdpipe = 1;
+	return (word);
 }
 
 void	int_handler(int sig)
@@ -89,14 +102,4 @@ void	int_handler(int sig)
 	}
 	else
 		printf("\n Sorry... What ??\n");
-}
-
-t_lexer	*struct_pipe(t_lexer *word, t_lexer *save)
-{
-	close(word->fdwrite);
-	save = word;
-	word = word->next;
-	word->prev = save;
-	word->fdpipe = 1;
-	return (word);
 }

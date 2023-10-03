@@ -134,7 +134,7 @@ char	*find_command_path(const char *cmd, char **environ_copy)
 	return (full_path);
 }
 
-void	ft_other(t_lexer *word, char **environ)
+void	ft_other(t_lexer *word, char **environ, char *cmd)
 {
 	pid_t		pid;
 	char		*full_path;
@@ -159,7 +159,8 @@ void	ft_other(t_lexer *word, char **environ)
 		{
 			perror("execve");
 			free(args);
-			//exit(EXIT_FAILURE);
+			ft_free_lexer(word, cmd, -42, -42);
+			exit(0);
 			return;
 		}
 		free (args);

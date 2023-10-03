@@ -101,6 +101,7 @@ char	*ft_strinsert(char *str1, char *str2, int pos)
 	mini.j = 0;
 	mini.k = 0;
 	ft_strinsert_bis(&mini, str1, str2, pos);
+	//free (str1);
 	mini.final[mini.i] = '\0';
 	return (mini.final);
 }
