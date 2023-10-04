@@ -134,6 +134,17 @@ char	*find_command_path(const char *cmd, char **environ_copy)
 	return (full_path);
 }
 
+void	ft_values(t_lexer *word, int pid)
+{
+	int status;
+
+    waitpid(pid, &status, 0);
+   	if (WIFEXITED(status)) 
+	{
+    	word->dol = WEXITSTATUS(status);
+	}
+}
+
 void	ft_other(t_lexer *word, char **environ, char *cmd)
 {
 	pid_t		pid;
@@ -166,5 +177,5 @@ void	ft_other(t_lexer *word, char **environ, char *cmd)
 		free (args);
 	}
 	else
-		wait(NULL);
+		ft_values(word, pid);
 }
