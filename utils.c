@@ -105,7 +105,8 @@ void	int_handler(int sig)
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		rl_redisplay();
+		if (g_signal != 1)
+			rl_redisplay();
 		(void) sig;
 	}
 	else

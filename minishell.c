@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	g_signal;
+
 void	reboot(t_lexer *word, int saved_stdout)
 {
 //Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à mettre dans le free_lexer ???
@@ -101,7 +103,7 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 		printf("---------- END ----------\n\n");
 	}*/
 
-	//Ici on Free tout le lexer.
+	//Ici on Free tout le lexer.int	g_signal;
 	ft_free_lexer(word, cmd, saved_stdin, saved_stdout);
 	//printf("\n    -- END OF LOOP --\n\n\n");
 }
@@ -115,6 +117,7 @@ int	main(void)
 	int			saved_stdin = dup(STDIN_FILENO);
 	int			saved_stdout = dup(STDOUT_FILENO);
 
+	g_signal = 0;
 	signal(SIGSEGV, int_handler);
 	signal(SIGINT, int_handler);
 	signal(SIGQUIT, SIG_IGN);

@@ -96,6 +96,7 @@ int	last_check(char *cmd, t_lexer *word, int start, int is_pipe)
 
 void executor_2(t_lexer *word, char **environ, int saved_stdout, char *cmd)
 {
+	g_signal = 1;
 	if (word->fdwrite > 1)
 		if (dup2(word->fdwrite, STDOUT_FILENO) < 0)
 			word->good = 0;
@@ -105,6 +106,7 @@ void executor_2(t_lexer *word, char **environ, int saved_stdout, char *cmd)
 	if (word->fdwrite > 1)
 		dup2(saved_stdout, STDOUT_FILENO);
 	//close(saved_stdout);
+	g_signal = 0;
 }
 
 void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)

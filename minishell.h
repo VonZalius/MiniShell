@@ -23,6 +23,8 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
+extern int	g_signal;
+
 typedef struct s_mini
 {
 	char	*final;
