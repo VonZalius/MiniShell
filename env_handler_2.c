@@ -14,8 +14,13 @@
 
 char	*dollar_search(char *cmd, t_lexer *word)
 {
-	cmd = ft_strinsert(cmd, ft_itoa(word->dol), word->i);
-	return (cmd);
+	char	*dol;
+	char	*cmd_2;
+
+	dol = ft_itoa(word->dol);
+	cmd_2 = ft_strinsert(cmd, dol, word->i, word);
+	free(dol);
+	return (cmd_2);
 }
 
 int	ft_len_of_dol(char *str1)
@@ -89,19 +94,21 @@ int	ft_strinsert_bis(t_mini *mini, char *str1, char *str2, int pos)
 	return (0);
 }
 
-char	*ft_strinsert(char *str1, char *str2, int pos)
+char	*ft_strinsert(char *str1, char *str2, int pos, t_lexer *word)
 {
 	t_mini	mini;
 
 	mini.len = ft_strlen(str1) + ft_strlen(str2) - ft_len_of_dol(str1);
-	mini.final = malloc (sizeof(char) * (mini.len) + 1);
+	mini.final = malloc (sizeof(char) * (mini.len + 1));
 	if (mini.final == NULL)
 		return (NULL);
 	mini.i = 0;
 	mini.j = 0;
 	mini.k = 0;
 	ft_strinsert_bis(&mini, str1, str2, pos);
-	//free (str1);
-	mini.final[mini.i] = '\0';
+	mini.final[mini.len] = '\0';
+	if (word->free_check != 0)
+		free(str1);
+	word->free_check = 1;
 	return (mini.final);
 }

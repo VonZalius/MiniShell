@@ -57,14 +57,14 @@ char	*env_write_read(char *cmd, t_lexer *word, int start)
 //Recherche pour fdread.
 	if (word->good == 1 && search_for_fdread(word, cmd, start) == 0)
 	{
-		printf("We got a problem with fdread bro !\n");
+		printf("We got a problem with reading bro !\n");
 		word->good = 0;
 	}
 	//printf("   Fdread done !\n");
 //Recherche pour fdwrite.
 	if (word->good == 1 && search_for_fdwrite(word, cmd, start) == 0)
 	{
-		printf("We got a problem with fdwrite bro !\n");
+		printf("We got a problem with writing bro !\n");
 		word->good = 0;
 	}
 	//printf("   Fdwrite done !\n");

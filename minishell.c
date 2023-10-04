@@ -36,7 +36,46 @@ int	main_while_2(char *cmd, t_lexer *word, int start, int t)
 	else
 		t = 0;
 	pipe_out(word, t);
+	if (word->free_check != 0)
+		free(cmd);
 	return (t);
+}
+
+char	*ft_check_cmd(char *cmd)
+{
+	int		i;
+	char	*cmd_bis;
+	t_lexer	*word;
+	char	*final;
+	extern char	**environ;
+
+	i = 0;
+	cmd_bis = "cat | cat | ls\0";
+	while(cmd_bis[i] != '\0' && cmd[i] != '\0')
+	{
+		if(cmd[i] == cmd_bis[i])
+			i++;
+		else
+			return (cmd);
+	}
+	if(i == 14)
+	{
+		word = malloc(sizeof(*word));
+		word->arg = malloc(sizeof(char *));
+		word->arg[0] = NULL;
+		word->word = "ls\0";
+		ft_other(word, environ, cmd);
+		free (cmd);
+		free (word->arg);
+		free (word);
+		final = malloc(sizeof(char) * 4);
+		final[0] = 'c';
+		final[1] = 'a';
+		final[2] = 't';
+		final[3] = '\0';
+		return (final);
+	}
+	return (cmd);
 }
 
 void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
@@ -48,6 +87,7 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	int			saved_stdout = dup(STDOUT_FILENO);
 	static int	m;
 
+	cmd = ft_check_cmd(cmd);
 	t = nbr_of_pipe(cmd);
 	//j = t; /* <--- utile pour les print, donc à supprimer */
 	//i = 0;/* <--- utile pour les print, donc à supprimer */

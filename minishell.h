@@ -36,6 +36,7 @@ typedef struct s_mini
 
 typedef struct s_lexer
 {
+	int				free_check;
 	int				dol;
 	int				quot_check;
 	int				cmd_check;
@@ -68,7 +69,7 @@ char	*ft_strinsert_fd(char *str1, char *str2, int pos);
 int		ft_double(char *cmd);
 char	*ft_strcat(char *dest, const char *src);
 void	free_array(char **arr);
-char	*ft_strinsert(char *str1, char *str2, int pos);
+char	*ft_strinsert(char *str1, char *str2, int pos, t_lexer *word);
 char	*dollar_search(char *cmd, t_lexer *word);
 void	pipe_out(t_lexer *word, int t);
 void	pipe_init(t_lexer *word);

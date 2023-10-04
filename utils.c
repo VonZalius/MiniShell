@@ -80,6 +80,7 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 		free(temp);
 	}
 	free (cmd);
+	//cmd++;
 	ft_close_handler();
 }
 

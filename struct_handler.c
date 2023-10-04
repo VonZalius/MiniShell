@@ -38,5 +38,6 @@ t_lexer	*struct_init(t_lexer *prevew, int i)
 	lexer_word->word = NULL;
 	lexer_word->next = prevew;
 	lexer_word->prev = NULL;
+	lexer_word->free_check = 0;
 	return (lexer_word);
 }

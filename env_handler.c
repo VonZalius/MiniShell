@@ -42,10 +42,10 @@ char	*s_f_e_bis(char *cmd, t_lexer *word)
 			j++;
 		}
 		str2[i] = '\0';
-		cmd = ft_strinsert(cmd, getenv(str2), word->i - 1);
+		cmd = ft_strinsert(cmd, getenv(str2), word->i - 1, word);
+		free(str2);
 		if (cmd == NULL)
 			return (NULL);
-		//free(str2);
 	}
 	return (cmd);
 }
