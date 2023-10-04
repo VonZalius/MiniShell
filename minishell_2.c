@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 15:37:01 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/04 20:21:14 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)
 {
 	char		oldpwd[1024];
 	extern char	**environ;
-	int			last_command_status = 0;
 
 	if (word->good == 1)
 	{
@@ -142,7 +141,7 @@ void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)
 		else if (ft_strcmp(word->word, "env") == 0)
 			word->dol = execute_env(environ, word->fdwrite);
 		else if (ft_strcmp(word->word, "exit") == 0)
-			word->dol = execute_exit(word, &word->arg[-1],last_command_status);
+			word->dol = execute_exit(word, &word->arg[-1]);
 	//Execution commande de base (j'imagine)
 		else
 			executor_2(word, environ, saved_stdout, cmd);

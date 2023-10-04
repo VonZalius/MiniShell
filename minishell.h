@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:59:54 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 15:49:37 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/04 20:21:44 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int		execute_pwd(int fd);
 int		execute_export(char **args, char ***environ, int fd);
 int		execute_unset(char **args, char ***environ);
 int		execute_env(char **environ, int fd);
-int		execute_exit(t_lexer *word, char **args, int last_command_status);
+int		execute_exit(t_lexer *word, char **args);
 void	malloc_error(char **error);
 void	malloc_error_1(char *error);
 void	free_environ(char **environ);
