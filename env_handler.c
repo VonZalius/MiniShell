@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:53:38 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 14:26:10 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 01:23:18 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,30 +20,35 @@ size_t	ft_strlen_space(const char *s, size_t i)
 	return (i);
 }
 
-char	*s_f_e_bis(char *cmd, t_lexer *word)
+static char	*extract_env_var_name(char *cmd, int *idx)
 {
 	int		i;
 	int		j;
-	char	*str2;
+	char	*var_name;
 
 	i = 0;
-	if (cmd[word->i] == '$')
+	j = *idx;
+	var_name = malloc(sizeof(char) * (ft_strlen_space(cmd, j) + 1));
+	while (cmd[j] && cmd[j] != ' ' && cmd[j] != '"' && cmd[j] != '|'
+		&& cmd[j] != '<' && cmd[j] != '>' && cmd[j] != '$')
 	{
-		if (cmd[word->i + 1] == ' ' || cmd[word->i + 1] == '\0')
-			return (cmd);
+		var_name[i++] = cmd[j++];
+	}
+	var_name[i] = '\0';
+	*idx = j;
+	return (var_name);
+}
+
+char	*s_f_e_bis(char *cmd, t_lexer *word)
+{
+	char	*var_name;
+
+	if (cmd[word->i] == '$' && cmd[word->i + 1] && cmd[word->i + 1] != ' ')
+	{
 		word->i++;
-		j = word->i;
-		str2 = malloc(sizeof(char) * (ft_strlen_space(cmd, word->i) + 1));
-		while (cmd[j] != '\0' && cmd[j] != ' ' && cmd[j] != '"'
-			&& cmd[j] != '|' && cmd[j] != '<' && cmd[j] != '>' && cmd[j] != '$')
-		{
-			str2[i] = cmd[j];
-			i++;
-			j++;
-		}
-		str2[i] = '\0';
-		cmd = ft_strinsert(cmd, getenv(str2), word->i - 1, word);
-		free(str2);
+		var_name = extract_env_var_name(cmd, &word->i);
+		cmd = ft_strinsert(cmd, getenv(var_name), word->i - 1, word);
+		free(var_name);
 		if (cmd == NULL)
 			return (NULL);
 	}
@@ -69,7 +74,6 @@ char	*search_for_env(t_lexer *word, char *cmd, int start)
 {
 	int		check;
 
-	//printf("-> search_for_env...\n");
 	word->i = start;
 	check = 0;
 	while (cmd[word->i] != '\0')

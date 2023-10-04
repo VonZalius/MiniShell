@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 14:27:14 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 01:29:02 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,85 +14,49 @@
 
 int	g_signal;
 
-void	reboot(t_lexer *word, int saved_stdout)
+static char	*handle_special_cmd(char *cmd)
 {
-//Ici on close le fdwrite. Ceci n'est pour le moment utile qu'au lexer-parser, donc se référer à Zalius, à mettre dans le free_lexer ???
-	if (word->fdwrite != 0)
-		close(word->fdwrite);
-	if (word->fdread != 0)
-		close(word->fdread);
-	//Ici on reboot tout les entrée et sortie standart
-	dup2(saved_stdout, STDOUT_FILENO);
-}
+	t_lexer		*word;
+	extern char	**environ;
+	char		*final;
 
-int	main_while_2(char *cmd, t_lexer *word, int start, int t)
-{
-	pipe_init(word);
-				//printf("   Enter pipe initialized !\n");
-	//Ici on séquence l'input !!
-	cmd = env_write_read(cmd, word, start);
-	if (word->good == 1)
-		t = last_check(cmd, word, start, t);
-	else
-		t = 0;
-	pipe_out(word, t);
-	if (word->free_check != 0)
-		free(cmd);
-	return (t);
+	word = malloc(sizeof(*word));
+	word->arg = malloc(sizeof(char *));
+	word->arg[0] = NULL;
+	word->word = "ls\0";
+	ft_other(word, environ, cmd);
+	free(cmd);
+	free(word->arg);
+	free(word);
+	final = strdup("cat");
+	return (final);
 }
 
 char	*ft_check_cmd(char *cmd)
 {
-	int		i;
 	char	*cmd_bis;
-	t_lexer	*word;
-	char	*final;
-	extern char	**environ;
 
-	i = 0;
 	cmd_bis = "cat | cat | ls\0";
-	while(cmd_bis[i] != '\0' && cmd[i] != '\0')
-	{
-		if(cmd[i] == cmd_bis[i])
-			i++;
-		else
-			return (cmd);
-	}
-	if(i == 14)
-	{
-		word = malloc(sizeof(*word));
-		word->arg = malloc(sizeof(char *));
-		word->arg[0] = NULL;
-		word->word = "ls\0";
-		ft_other(word, environ, cmd);
-		free (cmd);
-		free (word->arg);
-		free (word);
-		final = malloc(sizeof(char) * 4);
-		final[0] = 'c';
-		final[1] = 'a';
-		final[2] = 't';
-		final[3] = '\0';
-		return (final);
-	}
+	if (strcmp(cmd, cmd_bis) == 0)
+		return (handle_special_cmd(cmd));
 	return (cmd);
 }
 
+//Ici on initialise les Structures
+//Ici on lance l'execution !!!
+//Ici on Free tout le lexer.int	g_signal;
+//printf("\n    -- END OF LOOP --\n\n\n");
 void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 {
-	//int		i;/* <--- utile pour les print, donc à supprimer */
-	//int		j;/* <--- utile pour les print, donc à supprimer */
 	int			t;
-	int			saved_stdin = dup(STDIN_FILENO);
-	int			saved_stdout = dup(STDOUT_FILENO);
+	int			saved_stdin;
+	int			saved_stdout;
 	static int	m;
 
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
 	cmd = ft_check_cmd(cmd);
 	t = nbr_of_pipe(cmd);
-	//j = t; /* <--- utile pour les print, donc à supprimer */
-	//i = 0;/* <--- utile pour les print, donc à supprimer */
-
-	//Ici on initialise les Structures
 	while (t != 0)
 		word = struct_init(word, t--);
 	t = 1;
@@ -100,79 +64,24 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	while (t > 0)
 	{
 		t = main_while_2(cmd, word, start, t);
-	//Ici on lance l'execution !!!
 		executor(word, saved_stdout, t, cmd);
 		if (t > 0 && word->good == 1)
 		{
-			//printf("\nWE FIND A PIPE ! ABOOOOORT MISSION ! ----------------------\n\n"); // <--- à supprimer
 			start = t + 1;
 			word = struct_pipe(word, save);
 		}
 		reboot(word, saved_stdout);
 	}
 	m = word->dol;
-
-	//Ici on imprime une serie d'élément afin de checker que tout fonctionne, à supprimer. ATTENTION, CECI MODIFIE LES VALEURS !!!
-	/*if (word->good == 1)
-	{
-		printf("\nYou said : %s  <--------------------------------------\n\n", cmd);
-		j--;
-		i = 0;
-		word = find_word(word, 1);
-		while (j >= 0)
-		{
-			printf("Struct number %i\n", word->index);
-			printf("Word : %s\n", word->word);
-			printf("Fdread : %i\n", word->fdread);
-			printf("Fdwrite : %i\n", word->fdwrite);
-			t = 0;
-			printf("Nbr of Arg = %i\n", how_many_arg(cmd, i, 0));
-			while (t < (how_many_arg(cmd, i, 0)))
-			{
-				printf("Arg : %s\n", word->arg[t]);
-	
-				t++;
-			}
-			printf("\n");
-			j--;
-			word = word->next;
-			while (cmd[i] != '|' && cmd[i] != '\0')
-				i++;
-			i++;
-		}
-		printf("---------- END ----------\n\n");
-	}*/
-
-	//Ici on Free tout le lexer.int	g_signal;
 	ft_free_lexer(word, cmd, saved_stdin, saved_stdout);
-	//printf("\n    -- END OF LOOP --\n\n\n");
 }
 
 int	main(void)
 {
-	char		*cmd;
-	int			start;
-	t_lexer		*word;
-	t_lexer		*save;
-	int			saved_stdin = dup(STDIN_FILENO);
-	int			saved_stdout = dup(STDOUT_FILENO);
+	int		saved_stdin;
+	int		saved_stdout;
 
-	g_signal = 0;
-	signal(SIGSEGV, int_handler);
-	signal(SIGINT, int_handler);
-	signal(SIGQUIT, SIG_IGN);
-	while (1)
-	{
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
-		cmd = readline("Prompt > ");
-		if (cmd == NULL)
-			exit(0);
-		add_history(cmd);
-		word = NULL;
-		save = NULL;
-		start = 0;
-		main_while(cmd, word, save, start);
-	}
+	setup_environment(&saved_stdin, &saved_stdout);
+	shell_loop(saved_stdin, saved_stdout);
 	return (0);
 }

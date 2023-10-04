@@ -6,40 +6,11 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:08:39 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 12:10:50 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 00:56:23 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	open_fw_bis(char *cmd, t_lexer *word, int i)
-{
-	while (cmd[word->i] != ' ' && cmd[word->i] != '<'
-		&& cmd[word->i] != '>' && cmd[word->i] != '|' && cmd[word->i] != '\0')
-	{
-		if (cmd[word->i] != '\"' && cmd[word->i] != '\'')
-			i++;
-		word->i++;
-	}
-	return (i);
-}
-
-char	*open_fw_bis2(char *cmd, t_lexer *word, int i, char *file)
-{
-	while (cmd[word->i] != ' ' && cmd[word->i] != '<'
-		&& cmd[word->i] != '>' && cmd[word->i] != '|'
-		&& cmd[word->i] != '\0')
-	{
-		if (cmd[word->i] != '\"' && cmd[word->i] != '\'')
-		{
-			file[i] = cmd[word->i];
-			i++;
-		}
-		word->i++;
-	}
-	file[i] = '\0';
-	return (file);
-}
 
 int	open_fdwrite(t_lexer *word, char *cmd, char token, int nb)
 {
@@ -96,7 +67,6 @@ int	skip_quots(char *cmd, t_lexer *word)
 
 int	search_for_fdwrite(t_lexer *word, char *cmd, int start)
 {
-	//printf("-> search_for_fdwrite...\n");
 	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{
@@ -119,7 +89,6 @@ int	search_for_fdwrite(t_lexer *word, char *cmd, int start)
 
 int	search_for_fdread(t_lexer *word, char *cmd, int start)
 {
-	//printf("-> search_for_fdread...\n");
 	word->i = start;
 	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
 	{

@@ -6,13 +6,11 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:16 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 15:42:14 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 00:21:41 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-//MODIFIER STRCMP STRCPY
 
 // Fonction pour changer le répertoire courant
 // Elle prend en paramètres le chemin du répertoire cible et la variable oldpwd

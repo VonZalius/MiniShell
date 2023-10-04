@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/01 18:39:38 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 00:56:22 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	ft_fin(char *cmd, char *rl)
 			i += 2;
 			while (cmd[i] == ' ')
 				i++;
-			//printf("YYY %s\n ZZZ %s\n", &cmd[i], rl);
 			while (rl[j] != '\0')
 			{
 				if (cmd[i] != rl[j])

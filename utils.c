@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:55:49 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 15:49:29 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 00:56:17 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,6 @@ int	skip_from_until(t_lexer *word, char *cmd, char that, char this)
 	return (1);
 }
 
-void	ft_close_handler(void)
-{
-	int	j;
-
-	j = open("pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
-	close(j);
-	j = open("double_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
-	close(j);
-	j = open("pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
-	close(j);
-}
-
 void	ffl_2(t_lexer *word)
 {
 	int			i;
@@ -58,19 +46,18 @@ void	ffl_2(t_lexer *word)
 		free(word->word);
 }
 
+//Ici on reboot tout les entrée et sortie standart
 void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 {
 	t_lexer		*temp;
 
-	//Ici on reboot tout les entrée et sortie standart
-	if(s_stdin != -42)
+	if (s_stdin != -42)
 	{
 		dup2(s_stdin, STDIN_FILENO);
 		dup2(s_stdout, STDOUT_FILENO);
 		close(s_stdin);
 		close(s_stdout);
 	}
-	
 	while (word != NULL)
 	{
 		if (word->good != 0)
@@ -80,7 +67,6 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 		free(temp);
 	}
 	free (cmd);
-	//cmd++;
 	ft_close_handler();
 }
 

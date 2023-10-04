@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/04 20:21:14 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 00:48:35 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,38 @@
 
 int	nbr_of_pipe(char *cmd)
 {
-	int t;
-	int i;
+	int	t;
+	int	i;
 
 	t = 1;
 	i = 0;
-	/*if (cmd == NULL)
-		return (0);*/
 	while (cmd[i] != '\0')
 	{
 		if (cmd[i] == '\"')
 		{
 			i++;
-			while(cmd[i] != '\"' && cmd [i] != '\0')
+			while (cmd[i] != '\"' && cmd [i] != '\0')
 				i++;
 		}
 		else if (cmd[i] == '\'')
 		{
 			i++;
-			while(cmd[i] != '\'' && cmd [i] != '\0')
+			while (cmd[i] != '\'' && cmd [i] != '\0')
 				i++;
 		}
 		else if (cmd[i] == '|')
 			t++;
-		if(cmd[i] != '\0')
+		if (cmd[i] != '\0')
 			i++;
 	}
 	return (t);
 }
 
+//Remplace les $ par l'environnement
+//Recherche pour fdread.
+//Recherche pour fdwrite.
 char	*env_write_read(char *cmd, t_lexer *word, int start)
 {
-//Remplace les $ par l'environnement
 	if (word->good == 1)
 		cmd = search_for_env(word, cmd, start);
 	if (word->good == 1 && cmd == NULL)
@@ -53,22 +53,16 @@ char	*env_write_read(char *cmd, t_lexer *word, int start)
 		printf("We got a problem with the environnement bro !\n");
 		word->good = 0;
 	}
-	//printf("   Environnement done !\n");
-//Recherche pour fdread.
 	if (word->good == 1 && search_for_fdread(word, cmd, start) == 0)
 	{
 		printf("We got a problem with reading bro !\n");
 		word->good = 0;
 	}
-	//printf("   Fdread done !\n");
-//Recherche pour fdwrite.
 	if (word->good == 1 && search_for_fdwrite(word, cmd, start) == 0)
 	{
 		printf("We got a problem with writing bro !\n");
 		word->good = 0;
 	}
-	//printf("   Fdwrite done !\n");
-//Remplace les $ par l'environnement
 	if (word->good == 1)
 		cmd = search_for_env(word, cmd, start);
 	if (word->good == 1 && cmd == NULL)
@@ -76,13 +70,11 @@ char	*env_write_read(char *cmd, t_lexer *word, int start)
 		printf("We got a problem with the environnement bro !\n");
 		word->good = 0;
 	}
-	//printf("   Environnement done !\n");
 	return (cmd);
 }
 
 int	last_check(char *cmd, t_lexer *word, int start, int is_pipe)
 {
-//Last check across the cmd
 	is_pipe = cmd_in_struct(word, cmd, start);
 	if (is_pipe == 0)
 	{
@@ -90,11 +82,11 @@ int	last_check(char *cmd, t_lexer *word, int start, int is_pipe)
 		word->good = 0;
 		return (0);
 	}
-	//printf("Last_check done !\n");
 	return (is_pipe);
 }
 
-void executor_2(t_lexer *word, char **environ, int saved_stdout, char *cmd)
+//Ici on reboot tout les entrée et sortie standart
+void	executor_2(t_lexer *word, char **environ, int saved_stdout, char *cmd)
 {
 	g_signal = 1;
 	if (word->fdwrite > 1)
@@ -102,10 +94,8 @@ void executor_2(t_lexer *word, char **environ, int saved_stdout, char *cmd)
 			word->good = 0;
 	if (word->good != 0)
 		ft_other(word, environ, cmd);
-	//Ici on reboot tout les entrée et sortie standart
 	if (word->fdwrite > 1)
 		dup2(saved_stdout, STDOUT_FILENO);
-	//close(saved_stdout);
 	g_signal = 0;
 }
 
@@ -116,16 +106,6 @@ void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)
 
 	if (word->good == 1)
 	{
-		//printf("\n   RESULTAT !!!\n\n");
-		/*LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSOUS
-			   |XX|
-			   |XX|
-			   |XX|
-			 \XXXXXX/
-		 	  \XXXX/
-			   \XX/
-		        \/		*/
-
 		if (word->word == NULL)
 			t++;
 		else if (ft_strcmp(word->word, "echo") == 0)
@@ -142,18 +122,7 @@ void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)
 			word->dol = execute_env(environ, word->fdwrite);
 		else if (ft_strcmp(word->word, "exit") == 0)
 			word->dol = execute_exit(word, &word->arg[-1]);
-	//Execution commande de base (j'imagine)
 		else
 			executor_2(word, environ, saved_stdout, cmd);
-
-		/*      /\
-			   /XX\
-		 	  /XXXX\
-			 /XXXXXX\
-			   |XX|
-			   |XX|
-			   |XX|
-		LES FONCTION QUI FONT PARTIE DE L'EXECUTION DOIVENT ÊTRE MISENT CI DESSUS*/
-		//printf("\n   FIN DES RESULTAT !!!\n");
 	}
 }

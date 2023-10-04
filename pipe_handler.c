@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/01 18:40:38 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 00:56:19 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,25 +75,23 @@ int	insert_for_pipe(t_lexer *word)
 	return (1);
 }
 
+//Ici on initialise l'entrée qui suit le pipe
 void	pipe_init(t_lexer *word)
 {
 	word->good = 1;
-	//Ici on initialise l'entrée qui suit le pipe
 	if (word->good == 1)
 		if (word->fdpipe != 0 && word->good == 1)
 			if (insert_for_pipe(word) == 0)
 				word->good = 0;
 }
 
+//Ici on change la sortie en cas de pipe
 void	pipe_out(t_lexer *word, int t)
 {
-//Ici on change la sortie en cas de pipe
 	if (word->good == 1)
 	{
 		if (t > 0)
 			if (fd_for_pipe(word) == 0)
 				word->good = 0;
-		//printf("   Exit pipe initialized !\n");
 	}
 }
-

@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 11:55:49 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 15:49:15 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 00:56:18 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,29 @@ char	*ft_strcat(char *dest, const char *src)
 	}
 	dest[i + j] = '\0';
 	return (dest);
+}
+
+void	free_array(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
+void	ft_close_handler(void)
+{
+	int	j;
+
+	j = open("pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
+	j = open("double_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
+	j = open("pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	close(j);
 }
