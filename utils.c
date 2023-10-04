@@ -46,10 +46,21 @@ void	ft_close_handler(void)
 	close(j);
 }
 
+void	ffl_2(t_lexer *word)
+{
+	int			i;
+
+	i = 0;
+	while (word->arg[i])
+		free(word->arg[i++]);
+	free(word->arg);
+	if (word->word != NULL)
+		free(word->word);
+}
+
 void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 {
 	t_lexer		*temp;
-	int			i;
 
 	//Ici on reboot tout les entrée et sortie standart
 	if(s_stdin != -42)
@@ -59,14 +70,11 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 		close(s_stdin);
 		close(s_stdout);
 	}
+	
 	while (word != NULL)
 	{
-		i = 0;
-		while (word->arg[i])
-			free(word->arg[i++]);
-		free(word->arg);
-		if (word->word != NULL)
-			free(word->word);
+		if (word->good != 0)
+			ffl_2(word);
 		temp = word;
 		word = word->prev;
 		free(temp);
