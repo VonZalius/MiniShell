@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:15:39 by cmansey           #+#    #+#             */
-/*   Updated: 2023/09/28 15:10:12 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/04 20:45:26 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,13 +139,13 @@ void	ft_values(t_lexer *word, int pid)
 	int status;
 
     waitpid(pid, &status, 0);
-   	if (WIFEXITED(status)) 
+   	if (WIFEXITED(status))
 	{
     	word->dol = WEXITSTATUS(status);
 	}
 }
 
-void	ft_other(t_lexer *word, char **environ, char *cmd)
+/*void	ft_other(t_lexer *word, char **environ, char *cmd)
 {
 	pid_t		pid;
 	char		*full_path;
@@ -172,9 +172,43 @@ void	ft_other(t_lexer *word, char **environ, char *cmd)
 			free(args);
 			ft_free_lexer(word, cmd, -42, -42);
 			exit(0);
-			return;
+			return ;
 		}
 		free (args);
+	}
+	else
+		ft_values(word, pid);
+}*/
+void	ft_other(t_lexer *word, char **environ, char *cmd)
+{
+	pid_t		pid;
+	char		*full_path;
+	char		**args;
+
+	pid = fork();
+	if (pid == -1)
+		perror("fork");
+	else if (pid == 0)
+	{
+		args = make_args(word);
+		full_path = find_command_path(args[0], environ);
+		if (full_path)
+		{
+			if (execve(full_path, &args[0], environ) == -1)
+			{
+				perror("execve");
+				exit(1);
+			}
+			//free(full_path);
+		}
+		else
+		{
+			fprintf(stderr, "%s: command not found\n", args[0]);
+			free(args);
+			ft_free_lexer(word, cmd, -42, -42);
+			exit(1);
+		}
+		//free(args);
 	}
 	else
 		ft_values(word, pid);
