@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/05 01:29:02 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 01:41:10 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,13 @@ char	*ft_check_cmd(char *cmd)
 	return (cmd);
 }
 
-//Ici on initialise les Structures
-//Ici on lance l'execution !!!
-//Ici on Free tout le lexer.int	g_signal;
-//printf("\n    -- END OF LOOP --\n\n\n");
+void	initialize(int *saved_stdin, int *saved_stdout, char **cmd)
+{
+	*saved_stdin = dup(STDIN_FILENO);
+	*saved_stdout = dup(STDOUT_FILENO);
+	*cmd = ft_check_cmd(*cmd);
+}
+
 void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 {
 	int			t;
@@ -53,9 +56,7 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	int			saved_stdout;
 	static int	m;
 
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
-	cmd = ft_check_cmd(cmd);
+	initialize(&saved_stdin, &saved_stdout, &cmd);
 	t = nbr_of_pipe(cmd);
 	while (t != 0)
 		word = struct_init(word, t--);

@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:06 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/04 20:28:44 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/05 01:51:48 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,26 @@
 // Terminer le shell en quittant le programme
 // Pas d'argument, quitter avec succès
 // Libérer la mémoire allouée (si nécessaire)
+
+int	exit_with_error(char *error_msg)
+{
+	printf("%s", error_msg);
+	return (1);
+}
+
 int	execute_exit(t_lexer *word, char **args)
 {
 	int	exit_val;
+	int	dol;
 
+	dol = word->dol;
 	if (args[1] == NULL)
 	{
 		cleanup(word);
-		exit(word->dol);
+		exit(dol);
 	}
 	if (args[1] != NULL && args[2] != NULL)
-	{
-		printf("minishell: exit: too many arguments\n");
-		return (1);
-	}
+		return (exit_with_error("minishell: exit: too many arguments\n"));
 	else if (ft_isnum(args[1]))
 	{
 		exit_val = ft_atoi(args[1]) % 256;
