@@ -20,7 +20,7 @@ size_t	ft_strlen_space(const char *s, size_t i)
 	return (i);
 }
 
-static char	*extract_env_var_name(char *cmd, int *idx)
+/*static char	*extract_env_var_name(char *cmd, int *idx)
 {
 	int		i;
 	int		j;
@@ -49,6 +49,34 @@ char	*s_f_e_bis(char *cmd, t_lexer *word)
 		var_name = extract_env_var_name(cmd, &word->i);
 		cmd = ft_strinsert(cmd, getenv(var_name), word->i - 1, word);
 		free(var_name);
+		if (cmd == NULL)
+			return (NULL);
+	}
+	return (cmd);
+}*/
+
+char	*s_f_e_bis(char *cmd, t_lexer *word)
+{
+	int		i;
+	int		j;
+	char	*str2;
+
+	i = 0;
+	if (cmd[word->i] == '$')
+	{
+		if (cmd[word->i + 1] == ' ' || cmd[word->i + 1] == '\0')
+			return (cmd);
+		word->i++;
+		j = word->i;
+		str2 = malloc(sizeof(char) * (ft_strlen_space(cmd, word->i) + 1));
+		while (cmd[j] != '\0' && cmd[j] != ' ' && cmd[j] != '"'
+			&& cmd[j] != '|' && cmd[j] != '<' && cmd[j] != '>' && cmd[j] != '$')
+		{
+			str2[i++] = cmd[j++];
+		}
+		str2[i] = '\0';
+		cmd = ft_strinsert(cmd, getenv(str2), word->i - 1, word);
+		free(str2);
 		if (cmd == NULL)
 			return (NULL);
 	}

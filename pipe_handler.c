@@ -16,7 +16,7 @@ int	fd_for_pipe(t_lexer *word)
 {
 	int	fichier_sortie;
 
-	fichier_sortie = open("pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	fichier_sortie = open("libft/pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (fichier_sortie == -1)
 		return (0);
 	word->fdwrite = fichier_sortie;
@@ -28,7 +28,7 @@ int	insert_for_pipe_2(char *buffer, t_lexer *word)
 	int	i;
 	int	fichier_entree;
 
-	fichier_entree = open("pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	fichier_entree = open("libft/pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (fichier_entree == -1)
 	{
 		free(buffer);
@@ -44,7 +44,7 @@ int	insert_for_pipe_2(char *buffer, t_lexer *word)
 	write(word->fdread, "\n", 1);
 	free (buffer);
 	close(word->fdread);
-	fichier_entree = open("pipe_handler_2", 0);
+	fichier_entree = open("libft/pipe_handler_2", 0);
 	if (fichier_entree == -1)
 		return (0);
 	if (dup2(word->fdread, STDIN_FILENO) < 0)
@@ -58,7 +58,7 @@ int	insert_for_pipe(t_lexer *word)
 	int		bytes_read;
 	int		fd;
 
-	fd = open("pipe_handler", 0);
+	fd = open("libft/pipe_handler", 0);
 	if (fd < 0)
 		return (0);
 	buffer = malloc(sizeof(char) * 1024);

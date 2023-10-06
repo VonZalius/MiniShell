@@ -84,12 +84,11 @@ void	int_handler(int sig)
 {
 	if (sig == SIGSEGV)
 	{
-		printf("\nYou press -D\n");
 		exit(1);
 	}
 	else if (sig == SIGINT)
 	{
-		printf("\n");
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		if (g_signal != 1)

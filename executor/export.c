@@ -71,41 +71,6 @@ int	add_new_variable(char ***environ, char *var)
 // ou ajoute une nouvelle variable si elle n'existe pas
 // Trouver le signe égal dans la variable
 // Parcourir les variables existantes dans l'environnement
-/*void	replace_variable(char *var, char ***environ)
-{
-	char	*equal_sign;
-	size_t	var_name_length;
-	char	*var_value;
-	char	**existing_var;
-
-	equal_sign = ft_strchr(var, '=');
-	if (equal_sign == NULL || equal_sign == var)
-	{
-		printf("export: invalid syntax: %s\n", var);
-		return ;
-	}
-	var_name_length = equal_sign - var;
-	var_value = equal_sign + 1;
-	existing_var = *environ;
-	while (*existing_var != NULL)
-	{
-		if (ft_strncmp(*existing_var, var, var_name_length) == 0)
-		{
-			update_existing_variable(existing_var, var_value);
-			return ;
-		}
-		existing_var++;
-	}
-	existing_var = *environ;
-	while (*existing_var != NULL)
-	{
-		if (ft_strcmp(*existing_var, var) == 0)
-			return ;
-		existing_var++;
-	}
-	add_new_variable(environ, var);
-}*/
-
 static char	**find_variable(char *var, char **env, size_t var_name_length)
 {
 	while (*env)

@@ -15,6 +15,35 @@
 //Ici on reboot tout les entrée et sortie standart
 //Ici on séquence l'input !!
 
+int	nbr_of_pipe(char *cmd)
+{
+	int	t;
+	int	i;
+
+	t = 1;
+	i = 0;
+	while (cmd[i] != '\0')
+	{
+		if (cmd[i] == '\"')
+		{
+			i++;
+			while (cmd[i] != '\"' && cmd [i] != '\0')
+				i++;
+		}
+		else if (cmd[i] == '\'')
+		{
+			i++;
+			while (cmd[i] != '\'' && cmd [i] != '\0')
+				i++;
+		}
+		else if (cmd[i] == '|')
+			t++;
+		if (cmd[i] != '\0')
+			i++;
+	}
+	return (t);
+}
+
 void	setup_environment(int *saved_stdin, int *saved_stdout)
 {
 	*saved_stdout = dup(STDOUT_FILENO);

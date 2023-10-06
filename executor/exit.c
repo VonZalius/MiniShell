@@ -28,6 +28,7 @@ int	execute_exit(t_lexer *word, char **args)
 	int	dol;
 
 	dol = word->dol;
+
 	if (args[1] == NULL)
 	{
 		cleanup(word);
