@@ -59,20 +59,21 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 	initialize(&saved_stdin, &saved_stdout, &cmd);
 	t = nbr_of_pipe(cmd);
 	while (t != 0)
-		word = struct_init(word, t--);
+		word = struct_init(word, t--, m);
 	t = 1;
-	word->dol = m;
 	while (t > 0)
 	{
 		t = main_while_2(cmd, word, start, t);
 		executor(word, saved_stdout, t, cmd);
-		if (t > 0 && word->good == 1)
+		if (t > 0)
 		{
 			start = t + 1;
 			word = struct_pipe(word, save);
 		}
 		reboot(word, saved_stdout);
 	}
+	while (word->next)
+		word = struct_pipe(word, save);
 	m = word->dol;
 	ft_free_lexer(word, cmd, saved_stdin, saved_stdout);
 }

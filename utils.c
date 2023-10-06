@@ -60,7 +60,7 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 	}
 	while (word != NULL)
 	{
-		if (word->good != 0)
+		if (word->good != 0 || word->good == 2)
 			ffl_2(word);
 		temp = word;
 		word = word->prev;
@@ -72,11 +72,15 @@ void	ft_free_lexer(t_lexer *word, char *cmd, int s_stdin, int s_stdout)
 
 t_lexer	*struct_pipe(t_lexer *word, t_lexer *save)
 {
+	int	s;
+
+	s = word->good;
 	close(word->fdwrite);
 	save = word;
 	word = word->next;
 	word->prev = save;
 	word->fdpipe = 1;
+	word->good = s;
 	return (word);
 }
 

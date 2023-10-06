@@ -98,6 +98,8 @@ char	*ft_strinsert(char *str1, char *str2, int pos, t_lexer *word)
 {
 	t_mini	mini;
 
+	if(str2 == NULL)
+		return (NULL);
 	mini.len = ft_strlen(str1) + ft_strlen(str2) - ft_len_of_dol(str1);
 	mini.final = malloc (sizeof(char) * (mini.len + 1));
 	if (mini.final == NULL)

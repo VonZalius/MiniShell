@@ -56,7 +56,7 @@ typedef struct s_lexer
 int			search_for_fdread(t_lexer *word, char *cmd, int start);
 int			search_for_fdwrite(t_lexer *word, char *cmd, int start);
 char		*search_for_env(t_lexer *word, char *cmd, int start);
-t_lexer		*struct_init(t_lexer *prevew, int i);
+t_lexer		*struct_init(t_lexer *prevew, int i, int m);
 t_lexer		*find_word(t_lexer *last_word, int i);
 int			cmd_in_struct(t_lexer *word, char *cmd, int start);
 int			how_many_arg(char *cmd, int i_bis, int j);

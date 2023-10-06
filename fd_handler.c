@@ -109,6 +109,7 @@ int	search_for_fdread(t_lexer *word, char *cmd, int start)
 					return (0);
 				if (dup2(word->fdread, STDIN_FILENO) < 0)
 					return (0);
+				word->i--;
 			}
 		}
 		word->i++;

@@ -63,6 +63,11 @@ int	insert_for_pipe(t_lexer *word)
 		return (0);
 	buffer = malloc(sizeof(char) * 1024);
 	bytes_read = read(fd, buffer, 1024);
+	if (bytes_read == 0)
+	{
+		free(buffer);
+		return (0);
+	}
 	buffer[bytes_read - 1] = '\0';
 	close(fd);
 	if (bytes_read <= 0)

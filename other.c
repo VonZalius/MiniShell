@@ -18,7 +18,13 @@ void	ft_values(t_lexer *word, int pid)
 
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
+	{
 		word->dol = WEXITSTATUS(status);
+		if (word->dol != 0)
+		{
+			word->good = 2;
+		}
+	}
 }
 
 static void	child_process(t_lexer *word, char **environ, char *cmd)

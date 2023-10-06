@@ -19,7 +19,7 @@ t_lexer	*find_word(t_lexer *last_word, int i)
 	return (find_word(last_word->prev, i));
 }
 
-t_lexer	*struct_init(t_lexer *prevew, int i)
+t_lexer	*struct_init(t_lexer *prevew, int i, int m)
 {
 	t_lexer	*lexer_word;
 
@@ -36,5 +36,7 @@ t_lexer	*struct_init(t_lexer *prevew, int i)
 	lexer_word->next = prevew;
 	lexer_word->prev = NULL;
 	lexer_word->free_check = 0;
+	lexer_word->dol = m;
+	lexer_word->good = 1;
 	return (lexer_word);
 }

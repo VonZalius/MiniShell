@@ -44,6 +44,7 @@ int	execute_unset(char **args, char ***environ)
 	{
 		if (ft_strncmp(*existing_var, args[1], ft_strlen(args[1])) == 0)
 		{
+			free(*existing_var);
 			remove_variable(existing_var);
 			return (0);
 		}
