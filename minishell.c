@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/05 01:41:10 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/07 13:49:58 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_check_cmd(char *cmd)
 	char	*cmd_bis;
 
 	cmd_bis = "cat | cat | ls\0";
-	if (strcmp(cmd, cmd_bis) == 0)
+	if (ft_strcmp(cmd, cmd_bis) == 0)
 		return (handle_special_cmd(cmd));
 	return (cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:53:38 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/02 14:26:04 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/07 13:55:26 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	*ft_strinsert(char *str1, char *str2, int pos, t_lexer *word)
 {
 	t_mini	mini;
 
-	if(str2 == NULL)
+	if (str2 == NULL)
 		return (NULL);
 	mini.len = ft_strlen(str1) + ft_strlen(str2) - ft_len_of_dol(str1);
 	mini.final = malloc (sizeof(char) * (mini.len + 1));

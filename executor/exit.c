@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 16:01:06 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/05 01:51:48 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/07 13:49:11 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	execute_exit(t_lexer *word, char **args)
 	int	dol;
 
 	dol = word->dol;
-
 	if (args[1] == NULL)
 	{
 		cleanup(word);

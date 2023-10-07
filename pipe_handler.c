@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/05 00:56:19 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/07 13:54:59 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int	fd_for_pipe(t_lexer *word)
 {
 	int	fichier_sortie;
 
-	fichier_sortie = open("libft/pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	fichier_sortie = open("libft/pipe_handler",
+			O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (fichier_sortie == -1)
 		return (0);
 	word->fdwrite = fichier_sortie;
@@ -28,7 +29,8 @@ int	insert_for_pipe_2(char *buffer, t_lexer *word)
 	int	i;
 	int	fichier_entree;
 
-	fichier_entree = open("libft/pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	fichier_entree = open("libft/pipe_handler_2",
+			O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (fichier_entree == -1)
 	{
 		free(buffer);
@@ -37,10 +39,7 @@ int	insert_for_pipe_2(char *buffer, t_lexer *word)
 	word->fdread = fichier_entree;
 	i = 0;
 	while (buffer[i] != '\0')
-	{
-		write(word->fdread, &buffer[i], 1);
-		i++;
-	}
+		write(word->fdread, &buffer[i++], 1);
 	write(word->fdread, "\n", 1);
 	free (buffer);
 	close(word->fdread);

@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 13:16:42 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/05 00:48:35 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/07 13:52:45 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,15 @@ void	exec_bis(t_lexer *word, int saved_stdout, char **environ_bis, char *cmd)
 	else if (ft_strcmp(word->word, "exit") == 0)
 		word->dol = execute_exit(word, &word->arg[-1]);
 	else
-			executor_2(word, environ_bis, saved_stdout, cmd);
+		executor_2(word, environ_bis, saved_stdout, cmd);
 }
 
 void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)
 {
 	char		oldpwd[1024];
-	extern		char	**environ;
-	static		int i;
-	static		char **environ_bis;
+	extern char	**environ;
+	static int	i;
+	static char	**environ_bis;
 
 	if (i++ == 0)
 		environ_bis = duplicate_environ(environ);
@@ -100,7 +100,8 @@ void	executor(t_lexer *word, int saved_stdout, int t, char *cmd)
 		else if (ft_strcmp(word->word, "pwd") == 0)
 			word->dol = execute_pwd(word->fdwrite);
 		else if (ft_strcmp(word->word, "export") == 0)
-			word->dol = execute_export(&word->arg[-1], &environ_bis, word->fdwrite);
+			word->dol = execute_export(&word->arg[-1],
+					&environ_bis, word->fdwrite);
 		else if (ft_strcmp(word->word, "unset") == 0)
 			word->dol = execute_unset(&word->arg[-1], &environ_bis);
 		else

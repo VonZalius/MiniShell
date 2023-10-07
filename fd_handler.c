@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 12:08:39 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/05 00:56:23 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/10/07 14:07:17 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,27 +90,23 @@ int	search_for_fdwrite(t_lexer *word, char *cmd, int start)
 int	search_for_fdread(t_lexer *word, char *cmd, int start)
 {
 	word->i = start;
-	while (cmd[word->i] != '\0' && cmd[word->i] != '|')
+	while (cmd[word->i] && cmd[word->i] != '|')
 	{
-		if (skip_quots(cmd, word) == 0)
+		if (!skip_quots(cmd, word))
 			return (0);
 		if (cmd[word->i] == '<')
 		{
-			if (cmd[word->i + 1] == '<')
-			{
-				if (ft_double(cmd) == 0)
-					return (0);
-				word->i++;
-			}
-			else
+			if (cmd[word->i + 1] == '<' && !ft_double(cmd))
+				return (0);
+			else if (cmd[word->i + 1] != '<')
 			{
 				word->fdread = open_fdwrite(word, cmd, '<', 0);
-				if (word->fdread == -1)
-					return (0);
-				if (dup2(word->fdread, STDIN_FILENO) < 0)
+				if (word->fdread == -1 || dup2(word->fdread, STDIN_FILENO) < 0)
 					return (0);
 				word->i--;
 			}
+			else
+				word->i++;
 		}
 		word->i++;
 	}
