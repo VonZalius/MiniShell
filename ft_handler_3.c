@@ -71,7 +71,8 @@ int	ft_double_2(char *db2)
 	int	fd;
 
 	j = 0;
-	fd = open("libft/pdouble_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	fd = open("/Users/abarras/gittest/pdouble_handler",
+			O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (fd == -1)
 		return (0);
 	while (db2[j])
@@ -82,7 +83,7 @@ int	ft_double_2(char *db2)
 	free(db2);
 	write(fd, "\n", 1);
 	close(fd);
-	fd = open("libft/pdouble_handler", 0);
+	fd = open("/Users/abarras/gittest/pdouble_handler", 0);
 	if (dup2(fd, STDIN_FILENO) < 0)
 		return (0);
 	return (1);

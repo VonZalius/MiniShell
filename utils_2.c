@@ -83,10 +83,13 @@ void	ft_close_handler(void)
 {
 	int	j;
 
-	j = open("libft/pipe_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	j = open("/Users/abarras/gittest/pipe_handler",
+			O_RDWR | O_TRUNC | O_CREAT, 0644);
 	close(j);
-	j = open("libft/pdouble_handler", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	j = open("/Users/abarras/gittest/pdouble_handler",
+			O_RDWR | O_TRUNC | O_CREAT, 0644);
 	close(j);
-	j = open("libft/pipe_handler_2", O_RDWR | O_TRUNC | O_CREAT, 0644);
+	j = open("/Users/abarras/gittest/pipe_handler_2",
+			O_RDWR | O_TRUNC | O_CREAT, 0644);
 	close(j);
 }

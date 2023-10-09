@@ -76,7 +76,7 @@ void	shell_loop(int saved_stdin, int saved_stdout)
 	}
 }
 
-void	reboot(t_lexer *word, int saved_stdout)
+void	ft_reboot(t_lexer *word, int saved_stdout)
 {
 	if (word->fdwrite != 0)
 		close(word->fdwrite);

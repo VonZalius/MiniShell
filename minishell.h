@@ -99,7 +99,7 @@ int			open_fw_bis(char *cmd, t_lexer *word, int i);
 char		*open_fw_bis2(char *cmd, t_lexer *word, int i, char *file);
 void		ft_close_handler(void);
 int			cmd_malloc(t_lexer *word, int i_bis, int index_arg);
-void		reboot(t_lexer *word, int saved_stdout);
+void		ft_reboot(t_lexer *word, int saved_stdout);
 int			main_while_2(char *cmd, t_lexer *word, int start, int t);
 void		main_while(char *cmd, t_lexer *word, t_lexer *save, int start);
 void		setup_environment(int *saved_stdin, int *saved_stdout);

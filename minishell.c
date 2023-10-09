@@ -70,7 +70,7 @@ void	main_while(char *cmd, t_lexer *word, t_lexer *save, int start)
 			start = t + 1;
 			word = struct_pipe(word, save);
 		}
-		reboot(word, saved_stdout);
+		ft_reboot(word, saved_stdout);
 	}
 	while (word->next)
 		word = struct_pipe(word, save);
